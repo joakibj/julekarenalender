@@ -88,10 +88,10 @@ public abstract class AbstractPaintable implements Paintable
     {
       public String fix( String s )
       {
-        s = s.replace( "Æ", "Ã" );
-        s = s.replace( "Ø", "Õ" );
-        s = s.replace( "æ", "œ" );
-        s = s.replace( "ø", "ª" );
+        s = s.replace( "Ã†", "Ãƒ" );
+        s = s.replace( "Ã˜", "Ã•" );
+        s = s.replace( "Ã¦", "Å“" );
+        s = s.replace( "Ã¸", "Âª" );
         return s;
       }
     } );
