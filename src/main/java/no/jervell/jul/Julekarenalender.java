@@ -19,6 +19,7 @@ import no.jervell.awt.*;
 import no.jervell.file.CSVFile;
 import no.jervell.swing.ImageView;
 import no.jervell.swing.WheelView;
+import java.net.URL;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)
@@ -46,6 +47,7 @@ public class Julekarenalender implements WindowListener {
     private Font boldFont = new Font("Times New Roman", Font.BOLD, 50);
     private String resourceFolder = "res";
     private String imageFolder = resourceFolder + File.separator + "img";
+    private String staticImageFolder = "static/images/";
     private double maxVelocity = 100;
     private Color frameBackground = Color.black;
     private Color blankColor = Color.white;
@@ -177,7 +179,7 @@ public class Julekarenalender implements WindowListener {
     }
 
     private ImageView createImageView(String file) {
-        ImageView image = new ImageView(createImage(file));
+        ImageView image = new ImageView(createStaticImage(file));
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor), dim((int) size.getHeight() / imageReductionFactor)));
@@ -201,7 +203,7 @@ public class Julekarenalender implements WindowListener {
 
     private List<WheelView.Row> createPersonWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        Image first = createImage("spinnmeg.jpg");
+        Image first = createStaticImage("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
         // Adding of people is handled in the gameLogic
@@ -217,9 +219,9 @@ public class Julekarenalender implements WindowListener {
 
     private List<WheelView.Row> createBonusWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, createImage("lue.jpg")));
-        rows.add(new WheelView.Row(1, createImage("pakke.jpg")));
-        rows.add(new WheelView.Row(-1, createImage("tor.jpg")));
+        rows.add(new WheelView.Row(0, createStaticImage("lue.jpg")));
+        rows.add(new WheelView.Row(1, createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(-1, createStaticImage("joakim_lystad.jpg")));
         return rows;
     }
 
@@ -241,6 +243,18 @@ public class Julekarenalender implements WindowListener {
         label.setAnchor(Anchor.CENTER);
         label.setFont(plainFont);
         return label;
+    }
+
+    private Image createStaticImage(String name) {
+        URL url = getClass().getClassLoader().getResource(staticImageFolder + name);
+        try {
+            Image image = new Image(url);
+            image.setAnchor(Anchor.CENTER);
+            return image;
+        } catch (IOException e) {
+            System.out.println("Error reading static image: " + staticImageFolder + "/" + name + ": " + e);
+            return blank;
+        }
     }
 
     private Image createImage(String name) {
