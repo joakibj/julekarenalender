@@ -218,10 +218,15 @@ public class Julekarenalender implements WindowListener {
     }
 
     private List<WheelView.Row> createBonusWheelRowList() {
+        // Lookup custom images
+        Image bonus0 = createImage("bonus0.jpg");
+        Image bonus1 = createImage("bonus1.jpg");
+        Image bonus_1 = createImage("bonus_1.jpg");
+
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, createStaticImage("lue.jpg")));
-        rows.add(new WheelView.Row(1, createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(-1, createStaticImage("joakim_lystad.jpg")));
+        rows.add(new WheelView.Row(0, bonus0 != blank ? bonus0 : createStaticImage("lue.jpg")));
+        rows.add(new WheelView.Row(1, bonus1 != blank ? bonus1 : createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(-1, bonus_1 != blank ? bonus_1 : createStaticImage("joakim_lystad.jpg")));
         return rows;
     }
 
