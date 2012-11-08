@@ -45,7 +45,7 @@ public class Julekarenalender implements WindowListener {
     private JFrame frame;
     private Font plainFont = new Font("Times New Roman", Font.PLAIN, 50);
     private Font boldFont = new Font("Times New Roman", Font.BOLD, 50);
-    private String resourceFolder = "res";
+    private String resourceFolder = ".";
     private String imageFolder = resourceFolder + File.separator + "img";
     private String staticImageFolder = "static/images/";
     private double maxVelocity = 100;
