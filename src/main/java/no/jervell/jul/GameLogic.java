@@ -311,7 +311,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     {
       if ( queue.size() > 0 )
       {
-        Person p = queue.remove( Math.abs( rnd.nextInt() ) % queue.size() );
+        Person p = queue.remove( rnd.nextInt( queue.size() ) );
         p.setDay( day );
         return p;
       }
