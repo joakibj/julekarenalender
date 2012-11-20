@@ -43,15 +43,13 @@ import java.util.ArrayList;
  */
 public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinner.Target
 {
-  private static final long SEED = 3267000013L; // A large prime makes a good seed
-
   private enum State { INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED }
 
   private PersonDAO personDAO;
   private Script script;
   private State state;
 
-  private Random rnd = new Random( SEED );
+  private Random rnd = new Random();
   private WheelView date;
   private WheelView person;
   private WheelView bonus;
