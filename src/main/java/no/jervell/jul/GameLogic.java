@@ -3,6 +3,7 @@ package no.jervell.jul;
 import no.jervell.animation.Animation;
 import no.jervell.animation.Timer;
 import no.jervell.swing.WheelView;
+import no.jervell.util.SimpleLogger;
 
 import java.util.List;
 import java.util.Random;
@@ -156,7 +157,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   public void spinStarted( WheelView view, double velocity )
   {
-    System.out.println("--- spin started");
+    SimpleLogger.getInstance().debug("--- spin started");
     switch ( state )
     {
       case WINNER:
@@ -177,7 +178,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   public void spinStopped( WheelView view )
   {
-    System.out.println("--- spin stopped");
+    SimpleLogger.getInstance().debug("--- spin stopped");
     switch ( state )
     {
       case WAIT_FOR_PERSON:
@@ -202,7 +203,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   private void setState( State state )
   {
-    System.out.println( ">>> " + state );
+    SimpleLogger.getInstance().debug( ">>> " + state );
     if ( state == State.FINISHED ||
          state == State.WINNER )
     {

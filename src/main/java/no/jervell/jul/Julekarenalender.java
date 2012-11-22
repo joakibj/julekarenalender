@@ -22,6 +22,8 @@ import no.jervell.awt.*;
 import no.jervell.file.CSVFile;
 import no.jervell.swing.ImageView;
 import no.jervell.swing.WheelView;
+import no.jervell.util.SimpleLogger;
+
 import java.net.URL;
 
 /**
@@ -88,6 +90,7 @@ public class Julekarenalender implements WindowListener {
             jCommander.usage();
             System.exit(0);
         }
+        SimpleLogger.getInstance().setDebug(debug);
     }
 
     private void build() throws IOException {

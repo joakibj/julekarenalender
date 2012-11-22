@@ -1,6 +1,7 @@
 package no.jervell.jul;
 
 import no.jervell.swing.WheelView;
+import no.jervell.util.SimpleLogger;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -62,7 +63,7 @@ public class WheelSpinner extends MouseAdapter
 
   private void releaseWheel( String reason )
   {
-    System.out.println( "Releasing the wheel: " + reason );
+    SimpleLogger.getInstance().debug("Releasing the wheel: " + reason);
   }
 
   private void spinWheel( double velocity )
