@@ -45,15 +45,10 @@ public class Julekarenalender implements WindowListener {
     private JFrame frame;
     private Font plainFont = new Font("Times New Roman", Font.PLAIN, 50);
     private Font boldFont = new Font("Times New Roman", Font.BOLD, 50);
-    private String resourceFolder = ".";
-    private String imageFolder = resourceFolder + File.separator + "img";
-    private String staticImageFolder = "static/images/";
     private double maxVelocity = 100;
     private Color frameBackground = Color.black;
-    private Color blankColor = Color.white;
-    private Paint backgroundPaint = blankColor;
+    private Paint backgroundPaint = Color.white;
     private Color textPaint = Color.black;
-    private Image blank;
     private GameLogic gameLogic;
 
     public static void main(String[] args) {
@@ -80,15 +75,13 @@ public class Julekarenalender implements WindowListener {
     }
 
     private void setupDataSource() throws IOException {
-        File resourceFile = new File(resourceFolder, "julekarenalender.csv");
-        System.out.println(new File(resourceFolder).getParent());
+        File resourceFile = new File(".", "julekarenalender.csv");
         System.out.println(resourceFile);
         CSVFile dataSource = new CSVFile(resourceFile, true);
         personDAO = new PersonDAO(dataSource);
     }
 
     private void setupGUI() {
-        blank = createBlankImage();
         dateWheel = createDateWheel();
         personWheel = createPersonWheel();
         bonusWheel = createBonusWheel();
@@ -179,7 +172,7 @@ public class Julekarenalender implements WindowListener {
     }
 
     private ImageView createImageView(String file) {
-        ImageView image = new ImageView(createStaticImage(file));
+        ImageView image = new ImageView(ImageFactory.createStaticImage(file));
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor), dim((int) size.getHeight() / imageReductionFactor)));
@@ -203,7 +196,7 @@ public class Julekarenalender implements WindowListener {
 
     private List<WheelView.Row> createPersonWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        Image first = createStaticImage("spinnmeg.jpg");
+        Image first = ImageFactory.createStaticImage("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
         // Adding of people is handled in the gameLogic
@@ -211,7 +204,7 @@ public class Julekarenalender implements WindowListener {
     }
 
     ImageLabel createPersonWheelRow(Person p) {
-        Image img = createImage(p.getPicture());
+        Image img = ImageFactory.createImage(p.getPicture());
         Label lbl = createPersonLabel(p.getName());
         lbl.setAnchor(Anchor.LEFT_CENTER);
         return new ImageLabel(img, lbl);
@@ -219,14 +212,14 @@ public class Julekarenalender implements WindowListener {
 
     private List<WheelView.Row> createBonusWheelRowList() {
         // Lookup custom images
-        Image bonus0 = createImage("bonus0.jpg");
-        Image bonus1 = createImage("bonus1.jpg");
-        Image bonus_1 = createImage("bonus_1.jpg");
+        Image bonus0 = ImageFactory.createImage("bonus0.jpg");
+        Image bonus1 = ImageFactory.createImage("bonus1.jpg");
+        Image bonus_1 = ImageFactory.createImage("bonus_1.jpg");
 
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, bonus0 != blank ? bonus0 : createStaticImage("lue.jpg")));
-        rows.add(new WheelView.Row(1, bonus1 != blank ? bonus1 : createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(-1, bonus_1 != blank ? bonus_1 : createStaticImage("joakim_lystad.jpg")));
+        rows.add(new WheelView.Row(0, bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
+        rows.add(new WheelView.Row(1, bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(-1, bonus_1 != ImageFactory.BLANK ? bonus_1 : ImageFactory.createStaticImage("joakim_lystad.jpg")));
         return rows;
     }
 
@@ -248,42 +241,6 @@ public class Julekarenalender implements WindowListener {
         label.setAnchor(Anchor.CENTER);
         label.setFont(plainFont);
         return label;
-    }
-
-    private Image createStaticImage(String name) {
-        URL url = getClass().getClassLoader().getResource(staticImageFolder + name);
-        try {
-            Image image = new Image(url);
-            image.setAnchor(Anchor.CENTER);
-            return image;
-        } catch (IOException e) {
-            System.out.println("Error reading static image: " + staticImageFolder + "/" + name + ": " + e);
-            return blank;
-        }
-    }
-
-    private Image createImage(String name) {
-        if (name == null || name.length() == 0) {
-            return blank;
-        }
-        try {
-            Image image = new Image(new File(imageFolder, name).toURI());
-            image.setAnchor(Anchor.CENTER);
-            return image;
-        } catch (IOException e) {
-            System.out.println("Error reading file " + imageFolder + File.separator + name + ": " + e);
-            return blank;
-        }
-    }
-
-    private Image createBlankImage() {
-        int w = 10;
-        int h = 10;
-        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
-        Graphics g = bufferedImage.getGraphics();
-        g.setColor(blankColor);
-        g.fillRect(0, 0, w, h);
-        return new Image(bufferedImage);
     }
 
     private static int[] parseDays(String[] args) {
