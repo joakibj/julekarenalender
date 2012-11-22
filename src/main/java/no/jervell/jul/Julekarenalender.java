@@ -3,7 +3,6 @@ package no.jervell.jul;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import no.jervell.awt.*;
 import no.jervell.file.CSVFile;
 import no.jervell.swing.ImageView;
 import no.jervell.swing.WheelView;
-import java.net.URL;
+import no.jervell.util.ImageFactory;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)

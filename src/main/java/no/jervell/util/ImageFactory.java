@@ -1,4 +1,4 @@
-package no.jervell.jul;
+package no.jervell.util;
 
 import no.jervell.awt.Anchor;
 import no.jervell.awt.Image;
