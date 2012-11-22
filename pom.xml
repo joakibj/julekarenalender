@@ -20,6 +20,11 @@
       <version>4.10</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.beust</groupId>
+      <artifactId>jcommander</artifactId>
+      <version>1.29</version>
+    </dependency>                                c
   </dependencies>
 
   <build>
