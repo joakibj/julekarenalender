@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.JFrame;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import no.jervell.animation.AnimationLoop;
 import no.jervell.animation.FrameCounter;
 import no.jervell.awt.Image;
@@ -19,12 +22,24 @@ import no.jervell.file.CSVFile;
 import no.jervell.swing.ImageView;
 import no.jervell.swing.WheelView;
 import no.jervell.util.ImageFactory;
+import no.jervell.util.SimpleLogger;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class Julekarenalender implements WindowListener {
 
+    // JCommander parameters
+    @Parameter(description = "[Liste av tall med hvilke dager det skal foregå trekning]")
+    private List<String> days = new ArrayList<String>();
+
+    @Parameter(names = "-debug", description = "Start program i debug modus")
+    private boolean debug = false;
+
+    @Parameter(names = "-help", help = true, description = "Denne beskjeden")
+    private boolean help;
+
+    public static final String PROGRAM_NAME = "Julekarenalender";
     /**
      * User interface size scaler, 100=native, 200=double size, 50=half size,
      * etc
@@ -53,17 +68,28 @@ public class Julekarenalender implements WindowListener {
     public static void main(String[] args) {
         try {
             Julekarenalender julekalender = new Julekarenalender();
-            julekalender.build(args);
+            julekalender.init(args);
+            julekalender.build();
             julekalender.start();
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
-    private void build(String[] args) throws IOException {
+    private void init(String[] args) {
+        JCommander jCommander = new JCommander(this, args);
+        jCommander.setProgramName(PROGRAM_NAME);
+        if(help) {
+            jCommander.usage();
+            System.exit(0);
+        }
+        SimpleLogger.getInstance().setDebug(debug);
+    }
+
+    private void build() throws IOException {
         setupDataSource();
         setupGUI();
-        setupLogic(args);
+        setupLogic();
         attachListeners();
         doLayout();
     }
@@ -89,8 +115,8 @@ public class Julekarenalender implements WindowListener {
         footer = createImageView(scale > 100 ? "logoer2x.jpg" : "logoer.jpg");
     }
 
-    private void setupLogic(String[] args) {
-        int[] days = parseDays(args);
+    private void setupLogic() {
+        int[] days = parseDays();
 
         personWheelAnimation = new WheelAnimation(personWheel, maxVelocity);
         bonusWheelAnimation = new WheelAnimation(bonusWheel, maxVelocity);
@@ -165,7 +191,7 @@ public class Julekarenalender implements WindowListener {
 
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
-        frame.setTitle("Julekarenalender");
+        frame.setTitle(PROGRAM_NAME);
         frame.getContentPane().setBackground(frameBackground);
         return frame;
     }
@@ -242,13 +268,15 @@ public class Julekarenalender implements WindowListener {
         return label;
     }
 
-    private static int[] parseDays(String[] args) {
-        if (args == null || args.length == 0) {
+    private int[] parseDays() {
+        if (days.size() == 0) {
             return new int[]{Calendar.getInstance().get(Calendar.DAY_OF_MONTH)};
         } else {
-            int[] result = new int[args.length];
-            for (int i = 0; i < args.length; ++i) {
-                result[i] = Integer.parseInt(args[ i]);
+            int i = 0;
+            int[] result = new int[days.size()];
+            for(String day : days) {
+                result[i] = Integer.parseInt(day);
+                i++;
             }
             Arrays.sort(result);
             return result;

@@ -1,5 +1,7 @@
 package no.jervell.file;
 
+import no.jervell.util.SimpleLogger;
+
 import java.io.*;
 import java.util.*;
 
@@ -36,13 +38,13 @@ public class CSVFile
 
   public void save() throws IOException
   {
-    System.out.println("Saving CSV...");
+    SimpleLogger.getInstance().info("Saving CSV...");
     FileOutputStream    stream        = new FileOutputStream(file);
     OutputStreamWriter  streamWriter  = new OutputStreamWriter(stream);
     BufferedWriter      writer        = new BufferedWriter(streamWriter);
     writer.write( toCSV() );
     writer.close();
-    System.out.println("Saved to " + file);
+    SimpleLogger.getInstance().info("Saved to " + file);
   }
 
   private void readHeader(BufferedReader reader) throws IOException
