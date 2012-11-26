@@ -37,6 +37,12 @@ public class PersonDAOTest {
             assertThat(p.getDay(), is(i));
             i++;
         }
+
+        Person person = personer.get(0);
+        person.setName("Donald");
+
+        personDAO.persist();
+        Mockito.verify(dataSourceMock).save();
     }
 
 }
