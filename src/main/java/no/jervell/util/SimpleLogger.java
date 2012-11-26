@@ -2,6 +2,7 @@ package no.jervell.util;
 
 public class SimpleLogger {
     private boolean debug = false;
+    private boolean info = false;
 
     private SimpleLogger() { }
 
@@ -17,6 +18,10 @@ public class SimpleLogger {
         this.debug = debug;
     }
 
+    public void setInfo(boolean info) {
+        this.info = info;
+    }
+
     public void debug(String text) {
         if(debug) {
             System.out.println(text);
@@ -24,7 +29,9 @@ public class SimpleLogger {
     }
 
     public void info(String text) {
-        System.out.println(text);
+        if(info) {
+            System.out.println(text);
+        }
     }
 
     public void error(String text) {

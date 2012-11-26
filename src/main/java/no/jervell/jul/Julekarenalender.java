@@ -84,6 +84,7 @@ public class Julekarenalender implements WindowListener {
             System.exit(0);
         }
         SimpleLogger.getInstance().setDebug(debug);
+        SimpleLogger.getInstance().setInfo(true);
     }
 
     private void build() throws IOException {
