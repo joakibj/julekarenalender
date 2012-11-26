@@ -213,7 +213,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
       }
       catch ( Exception e )
       {
-        System.err.println( "Unable to persist data. Reason: " + e );
+        SimpleLogger.getInstance().error( "Unable to persist data. Reason: " + e );
       }
     }
     this.state = state;
