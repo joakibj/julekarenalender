@@ -38,13 +38,12 @@ public class CSVFile
 
   public void save() throws IOException
   {
-    SimpleLogger.getInstance().info("Saving CSV...");
     FileOutputStream    stream        = new FileOutputStream(file);
     OutputStreamWriter  streamWriter  = new OutputStreamWriter(stream);
     BufferedWriter      writer        = new BufferedWriter(streamWriter);
     writer.write( toCSV() );
     writer.close();
-    SimpleLogger.getInstance().info("Saved to " + file);
+    SimpleLogger.getInstance().info("Configuration has been saved to " + file);
   }
 
   private void readHeader(BufferedReader reader) throws IOException

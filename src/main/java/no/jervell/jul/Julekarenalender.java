@@ -102,7 +102,7 @@ public class Julekarenalender implements WindowListener {
 
     private void setupDataSource() throws IOException {
         File resourceFile = new File(".", "julekarenalender.csv");
-        System.out.println(resourceFile);
+        SimpleLogger.getInstance().info("Loading configuration from: " + resourceFile);
         CSVFile dataSource = new CSVFile(resourceFile, true);
         personDAO = new PersonDAO(dataSource);
     }
