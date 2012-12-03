@@ -3,6 +3,7 @@ package no.jervell.swing;
 import no.jervell.animation.FrameCounter;
 import no.jervell.awt.Paintable;
 import no.jervell.gfx.ImageFilter;
+import no.jervell.util.SimpleLogger;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -166,7 +167,7 @@ public class WheelView extends Component
 
     if ( frameCounter != null && frameCounter.frame() )
     {
-      System.out.println(frameCounter);
+      SimpleLogger.getInstance().debug("" + frameCounter);
     }
   }
 
@@ -180,14 +181,14 @@ public class WheelView extends Component
     catch (InterruptedException e)
     {
       // Ouch, we were interrupted while grabbing. Oh well, not much we can do about that...
-      System.err.println( "Interrupted while grabbing pixels: " + e );
+      SimpleLogger.getInstance().info( "Interrupted while grabbing pixels: " + e );
     }
 
     // Pixel are grabbed now, but make sure there were no problems
     if ( (grabber.getStatus() & ImageObserver.ABORT) != 0 )
     {
       // Doh, it seems the grabbing of the pixels was aborted...
-      System.err.println( "Pixel grabbing aborted." );
+      SimpleLogger.getInstance().info( "Pixel grabbing aborted." );
     }
   }
 

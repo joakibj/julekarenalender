@@ -1,5 +1,7 @@
 package no.jervell.animation;
 
+import no.jervell.util.SimpleLogger;
+
 /**
  * @author Arne C. Jervell (arne@jervell.no)
 */
@@ -40,9 +42,9 @@ public class AnimationLoop extends Thread
     }
     catch ( InterruptedException e )
     {
-      System.err.println( "Breaking out of loop. Reason: " + e );
+      SimpleLogger.getInstance().info( "Breaking out of loop. Reason: " + e );
     }
-    System.out.println( "Loop stopped." );
+    SimpleLogger.getInstance().debug( "Loop stopped." );
   }
 
   private void initAnimations()

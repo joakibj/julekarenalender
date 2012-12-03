@@ -3,6 +3,7 @@ package no.jervell.jul;
 import no.jervell.animation.Animation;
 import no.jervell.animation.Timer;
 import no.jervell.swing.WheelView;
+import no.jervell.util.SimpleLogger;
 
 import java.util.List;
 import java.util.Random;
@@ -43,15 +44,13 @@ import java.util.ArrayList;
  */
 public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinner.Target
 {
-  private static final long SEED = 3267000013L; // A large prime makes a good seed
-
   private enum State { INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED }
 
   private PersonDAO personDAO;
   private Script script;
   private State state;
 
-  private Random rnd = new Random( SEED );
+  private Random rnd = new Random();
   private WheelView date;
   private WheelView person;
   private WheelView bonus;
@@ -148,8 +147,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
         else if ( view == bonus )
         {
-          boolean repeatingDate = script.hasNext() && script.getDay() == script.getNextDay();
-          return bonus.getIndex( repeatingDate ? 1 : -1 );  // TODO: Constants?
+          return script.randomBonusIndex();
         }
         break;
     }
@@ -158,7 +156,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   public void spinStarted( WheelView view, double velocity )
   {
-    System.out.println("--- spin started");
+    SimpleLogger.getInstance().debug("--- spin started");
     switch ( state )
     {
       case WINNER:
@@ -179,7 +177,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   public void spinStopped( WheelView view )
   {
-    System.out.println("--- spin stopped");
+    SimpleLogger.getInstance().debug("--- spin stopped");
     switch ( state )
     {
       case WAIT_FOR_PERSON:
@@ -204,7 +202,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
   private void setState( State state )
   {
-    System.out.println( ">>> " + state );
+    SimpleLogger.getInstance().debug( ">>> " + state );
     if ( state == State.FINISHED ||
          state == State.WINNER )
     {
@@ -214,7 +212,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
       }
       catch ( Exception e )
       {
-        System.err.println( "Unable to persist data. Reason: " + e );
+        SimpleLogger.getInstance().error( "Unable to persist data. Reason: " + e );
       }
     }
     this.state = state;
@@ -311,7 +309,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     {
       if ( queue.size() > 0 )
       {
-        Person p = queue.remove( Math.abs( rnd.nextInt() ) % queue.size() );
+        Person p = queue.remove( rnd.nextInt( queue.size() ) );
         p.setDay( day );
         return p;
       }
@@ -339,6 +337,11 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
       winners[ pos ] = extractRandomWinner( oldPerson.getDay(), queue );
       oldPerson.setDay( 0 );
       return getPerson();
+    }
+
+    public int randomBonusIndex()
+    {
+      return bonus.getIndex(rnd.nextInt(bonus.getRowCount()));
     }
 
     public boolean hasCurrent()
