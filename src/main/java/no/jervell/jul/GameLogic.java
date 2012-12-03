@@ -147,8 +147,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
         else if ( view == bonus )
         {
-          boolean repeatingDate = script.hasNext() && script.getDay() == script.getNextDay();
-          return bonus.getIndex( repeatingDate ? 1 : -1 );  // TODO: Constants?
+          return script.randomBonusIndex();
         }
         break;
     }
@@ -338,6 +337,11 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
       winners[ pos ] = extractRandomWinner( oldPerson.getDay(), queue );
       oldPerson.setDay( 0 );
       return getPerson();
+    }
+
+    public int randomBonusIndex()
+    {
+      return bonus.getIndex(rnd.nextInt(bonus.getRowCount()));
     }
 
     public boolean hasCurrent()

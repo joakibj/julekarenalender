@@ -245,7 +245,7 @@ public class Julekarenalender implements WindowListener {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         rows.add(new WheelView.Row(0, bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
         rows.add(new WheelView.Row(1, bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(-1, bonus_1 != ImageFactory.BLANK ? bonus_1 : ImageFactory.createStaticImage("joakim_lystad.jpg")));
+        rows.add(new WheelView.Row(2, bonus_1 != ImageFactory.BLANK ? bonus_1 : ImageFactory.createStaticImage("joakim_lystad.jpg")));
         return rows;
     }
 
