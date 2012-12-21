@@ -1,7 +1,7 @@
 package no.jervell.util;
 
-import no.jervell.awt.Anchor;
-import no.jervell.awt.Image;
+import no.jervell.view.awt.Anchor;
+import no.jervell.view.awt.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

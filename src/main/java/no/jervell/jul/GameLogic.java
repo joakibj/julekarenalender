@@ -1,8 +1,13 @@
 package no.jervell.jul;
 
-import no.jervell.animation.Animation;
-import no.jervell.animation.Timer;
-import no.jervell.swing.WheelView;
+import no.jervell.domain.Person;
+import no.jervell.repository.impl.DefaultPersonDAO;
+import no.jervell.view.animation.Animation;
+import no.jervell.view.animation.impl.WheelAnimation;
+import no.jervell.view.animation.impl.WheelRowAnimator;
+import no.jervell.view.animation.impl.WheelSpinner;
+import no.jervell.view.animation.impl.DefaultTimer;
+import no.jervell.view.swing.WheelView;
 import no.jervell.util.SimpleLogger;
 
 import java.util.List;
@@ -46,7 +51,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 {
   private enum State { INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED }
 
-  private PersonDAO personDAO;
+  private DefaultPersonDAO personDAO;
   private Script script;
   private State state;
 
@@ -78,7 +83,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     person.setRows( rows );
   }
 
-  public void init( Timer timer )
+  public void init( DefaultTimer timer )
   {
     date.setEnabled( false );
     person.setEnabled( false );
@@ -90,7 +95,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     setState( State.LOOP );
   }
 
-  public void move( Timer timer )
+  public void move( DefaultTimer timer )
   {
     rotateDateWheel();
     switch ( state )

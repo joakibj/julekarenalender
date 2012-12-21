@@ -3,8 +3,9 @@ package no.jervell.jul;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
-import no.jervell.file.CSVFile;
-import org.junit.Assert;
+import no.jervell.domain.Person;
+import no.jervell.repository.impl.CSVFile;
+import no.jervell.repository.impl.DefaultPersonDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,7 +27,7 @@ public class PersonDAOTest {
             Mockito.when(dataSourceMock.get(i, "day", 0)).thenReturn(i);
         }
 
-        PersonDAO personDAO = new PersonDAO(dataSourceMock);
+        DefaultPersonDAO personDAO = new DefaultPersonDAO(dataSourceMock);
 
         List<Person> personer = personDAO.getPersonList();
         assertThat(personer.size(), is(4));

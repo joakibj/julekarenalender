@@ -13,14 +13,18 @@ import javax.swing.JFrame;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import no.jervell.animation.AnimationLoop;
-import no.jervell.animation.FrameCounter;
-import no.jervell.awt.Image;
-import no.jervell.awt.Label;
-import no.jervell.awt.*;
-import no.jervell.file.CSVFile;
-import no.jervell.swing.ImageView;
-import no.jervell.swing.WheelView;
+import no.jervell.domain.Person;
+import no.jervell.repository.impl.DefaultPersonDAO;
+import no.jervell.view.animation.impl.WheelAnimation;
+import no.jervell.view.animation.impl.WheelSpinner;
+import no.jervell.view.animation.impl.AnimationLoop;
+import no.jervell.view.animation.impl.FrameCounter;
+import no.jervell.view.awt.Image;
+import no.jervell.view.awt.Label;
+import no.jervell.view.awt.*;
+import no.jervell.repository.impl.CSVFile;
+import no.jervell.view.swing.ImageView;
+import no.jervell.view.swing.WheelView;
 import no.jervell.util.ImageFactory;
 import no.jervell.util.SimpleLogger;
 
@@ -45,7 +49,7 @@ public class Julekarenalender implements WindowListener {
      * etc
      */
     final static int scale = 125;
-    PersonDAO personDAO;
+    DefaultPersonDAO personDAO;
     WheelView dateWheel;
     WheelView personWheel;
     WheelView bonusWheel;
@@ -104,7 +108,7 @@ public class Julekarenalender implements WindowListener {
         File resourceFile = new File(".", "julekarenalender.csv");
         SimpleLogger.getInstance().info("Loading configuration from: " + resourceFile);
         CSVFile dataSource = new CSVFile(resourceFile, true);
-        personDAO = new PersonDAO(dataSource);
+        personDAO = new DefaultPersonDAO(dataSource);
     }
 
     private void setupGUI() {
