@@ -1,9 +1,8 @@
-package no.jervell.repository.file;
+package no.jervell.repository.impl;
 
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
-import no.jervell.repository.impl.CSVFile;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
