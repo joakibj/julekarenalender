@@ -1,6 +1,7 @@
 package no.jervell.repository.impl;
 
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Rule;
@@ -31,23 +32,10 @@ public class CSVFileTest {
         dataSource = new CSVFile(file, true);
         assertThat(dataSource.getRowCount(), is(4));
 
-        List<String> cells = dataSource.getRow(0);
-        assertThat(cells.size(), is(4));
-        assertThat(cells.get(0), is("Ole"));
-        assertThat(cells.get(1), is("ole.jpg"));
-        assertThat(cells.get(2), is("1"));
-        assertThat(cells.get(3), is("Borte"));
-
-        cells = dataSource.getRow(1);
-        assertThat(cells.size(), is(3));
-        assertThat(cells.get(0), is("Dole"));
-        assertThat(cells.get(1), is("dole.jpg"));
-        assertThat(cells.get(2), is("2"));
-
-        cells = dataSource.getRow(3);
-        assertThat(cells.size(), is(2));
-        assertThat(cells.get(0), is("Donald"));
-        assertThat(cells.get(1), is("donald.jpg"));
+        assertDataRow(dataSource.getRow(0), "Ole", "ole.jpg", "1", "Borte", 4);
+        assertDataRow(dataSource.getRow(1), "Dole", "dole.jpg", "2", null, 3);
+        assertDataRow(dataSource.getRow(2), "Doffen", "doffen.jpg", "3", null, 3);
+        assertDataRow(dataSource.getRow(3), "Donald", "donald.jpg", null, null, 2);
 
         assertThat(dataSource.get(0, "Name"), is("Ole"));
         assertThat(dataSource.get(1, "Name"), is("Dole"));
@@ -81,6 +69,18 @@ public class CSVFileTest {
 
         String actual = readFileToString(file);
         assertThat(actual, is(expected));
+    }
+
+    private void assertDataRow(List<String> cells, String name, String fileName, String dayWon, String note, int expectedSize) {
+        assertThat(cells.size(), is(expectedSize));
+        assertThat(cells.get(0), is(name));
+        assertThat(cells.get(1), is(fileName));
+        if (dayWon != null) {
+            assertThat(cells.get(2), is(dayWon));
+        }
+        if (note != null) {
+            assertThat(cells.get(3), is(note));
+        }
     }
 
     private File createTemporaryFileWithContents(String filename, String contents) throws IOException {
