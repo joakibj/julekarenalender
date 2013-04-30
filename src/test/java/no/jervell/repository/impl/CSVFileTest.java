@@ -1,5 +1,6 @@
 package no.jervell.repository.impl;
 
+import static no.jervell.util.CSVStringBuilder.getCSVStringBuilder;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
@@ -21,19 +22,17 @@ public class CSVFileTest {
     private File file;
     private CSVFile dataSource;
 
-    private String newLine = System.getProperty("line.separator");
-
     @Before
     public void setUp() {
         setUpData();
     }
 
     public void setUpData() {
-        String csv = "Name;Picture;Day;Note" + newLine +
-                "Ole;ole.jpg;1;Borte" + newLine +
-                "Dole;dole.jpg;2;" + newLine +
-                "Doffen;doffen.jpg;3;" + newLine +
-                "Donald;donald.jpg;";
+        String csv = getCSVStringBuilder()
+                .addLine("Ole;ole.jpg;1;Borte")
+                .addLine("Dole;dole.jpg;2;")
+                .addLine("Doffen;doffen.jpg;3;")
+                .addLine("Donald;donald.jpg;").build();
         try {
             file = createTemporaryFileWithContents("default.csv", csv);
             dataSource = new CSVFile(file, true);
@@ -67,11 +66,11 @@ public class CSVFileTest {
 
         dataSource.save();
 
-        String expected = "Name;Picture;Day;Note" + newLine +
-                "Ole;ole.jpg;1;Borte" + newLine +
-                "Dole;dole.jpg;2" + newLine +
-                "Doffen;doffen.jpg;3" + newLine +
-                "Dolly;dolly.jpg;26";
+        String expected = getCSVStringBuilder()
+                .addLine("Ole;ole.jpg;1;Borte")
+                .addLine("Dole;dole.jpg;2")
+                .addLine("Doffen;doffen.jpg;3")
+                .addLine("Dolly;dolly.jpg;26").build();
 
         String actual = readFileToString(file);
         assertThat(actual, is(expected));
