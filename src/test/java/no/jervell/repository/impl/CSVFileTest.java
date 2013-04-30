@@ -4,6 +4,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -17,19 +18,32 @@ import java.util.List;
 public class CSVFileTest {
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
+    private File file;
     private CSVFile dataSource;
 
     private String newLine = System.getProperty("line.separator");
 
-    @Test
-    public void shouldReadDefaultCSVFile() throws IOException {
+    @Before
+    public void setUp() {
+        setUpData();
+    }
+
+    public void setUpData() {
         String csv = "Name;Picture;Day;Note" + newLine +
                 "Ole;ole.jpg;1;Borte" + newLine +
                 "Dole;dole.jpg;2;" + newLine +
                 "Doffen;doffen.jpg;3;" + newLine +
                 "Donald;donald.jpg;";
-        File file = createTemporaryFileWithContents("default.csv", csv);
-        dataSource = new CSVFile(file, true);
+        try {
+            file = createTemporaryFileWithContents("default.csv", csv);
+            dataSource = new CSVFile(file, true);
+        } catch (IOException ioe) {
+            fail("Data setup failed");
+        }
+    }
+
+    @Test
+    public void shouldReadDefaultCSVFile() {
         assertThat(dataSource.getRowCount(), is(4));
 
         assertDataRow(dataSource.getRow(0), "Ole", "ole.jpg", "1", "Borte", 4);
@@ -47,14 +61,6 @@ public class CSVFileTest {
 
     @Test
     public void shouldReadAndSaveCSVFileAfterChanges() throws IOException {
-        String csv = "Name;Picture;Day;Note" + newLine +
-                "Ole;ole.jpg;1;Borte" + newLine +
-                "Dole;dole.jpg;2;" + newLine +
-                "Doffen;doffen.jpg;3;" + newLine +
-                "Donald;donald.jpg;";
-        File file = createTemporaryFileWithContents("default.csv", csv);
-        dataSource = new CSVFile(file, true);
-
         dataSource.set(3, "Name", "Dolly");
         dataSource.set(3, "Picture", "dolly.jpg");
         dataSource.set(3, "Day", "26");
