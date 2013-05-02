@@ -36,6 +36,6 @@ public class SimpleLogger {
     }
 
     public void error(String text) {
-        System.out.println(text);
+        System.err.println(text);
     }
 }
