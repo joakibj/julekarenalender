@@ -22,17 +22,26 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 public class MainWindow implements WindowListener {
+    private static final String FONT_NAME = "Times New Roman";
+    private static final int FONT_SIZE = 50;
+    private static final Font PLAIN_FONT = new Font(FONT_NAME, Font.PLAIN, FONT_SIZE);
+    private static final Font BOLD_FONT = new Font(FONT_NAME, Font.BOLD, FONT_SIZE);
+    private static final double MAX_VELOCITY = 100;
+    private static final Color FRAME_BACKGROUND = Color.black;
+    private static final Paint BACKGROUND_COLOUR = Color.white;
+    private static final Color TEXT_COLOUR = Color.black;
+
     /**
      * User interface size scaler, 100=native, 200=double size, 50=half size,
      * etc
      */
-    //TODO: Make enum
+    //TODO: Make enum?
     final static int scale = 125;
     private AnimationLoop loop;
     private JFrame frame;
     private int[] days;
-
     private PersonDAO personDAO;
+    private GameLogic gameLogic;
 
     //TODO: Split up further into a seperate class encapsulating Wheel functionality
     public WheelView dateWheel;
@@ -44,14 +53,6 @@ public class MainWindow implements WindowListener {
     private WheelSpinner bonusWheelSpinner;
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
-
-    private Font plainFont = new Font("Times New Roman", Font.PLAIN, 50);
-    private Font boldFont = new Font("Times New Roman", Font.BOLD, 50);
-    private double maxVelocity = 100;
-    private Color frameBackground = Color.black;
-    private Paint backgroundPaint = Color.white;
-    private Color textPaint = Color.black;
-    private GameLogic gameLogic;
 
     public MainWindow(int[] days, PersonDAO personDAO) {
         this.days = days;
@@ -81,11 +82,11 @@ public class MainWindow implements WindowListener {
     }
 
     private void setupLogic() {
-        personWheelAnimation = new WheelAnimation(personWheel, maxVelocity);
-        bonusWheelAnimation = new WheelAnimation(bonusWheel, maxVelocity);
+        personWheelAnimation = new WheelAnimation(personWheel, MAX_VELOCITY);
+        bonusWheelAnimation = new WheelAnimation(bonusWheel, MAX_VELOCITY);
         loop = new AnimationLoop();
-        personWheelSpinner = new WheelSpinner(personWheelAnimation, maxVelocity);
-        bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, maxVelocity);
+        personWheelSpinner = new WheelSpinner(personWheelAnimation, MAX_VELOCITY);
+        bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, MAX_VELOCITY);
         gameLogic = new GameLogic(days, personDAO, this);
 
         loop.setAnimations(personWheelAnimation, bonusWheelAnimation, gameLogic);
@@ -155,7 +156,7 @@ public class MainWindow implements WindowListener {
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
         frame.setTitle(Julekarenalender.PROGRAM_NAME);
-        frame.getContentPane().setBackground(frameBackground);
+        frame.getContentPane().setBackground(FRAME_BACKGROUND);
         return frame;
     }
 
@@ -171,7 +172,7 @@ public class MainWindow implements WindowListener {
     private WheelView createWheelView() {
         WheelView date = new WheelView();
         date.setVisibleRows(2);
-        date.setBackground(backgroundPaint);
+        date.setBackground(BACKGROUND_COLOUR);
         return date;
     }
 
@@ -203,22 +204,18 @@ public class MainWindow implements WindowListener {
         // Lookup custom images
         no.jervell.view.awt.Image bonus0 = ImageFactory.createImage("bonus0.jpg");
         no.jervell.view.awt.Image bonus1 = ImageFactory.createImage("bonus1.jpg");
-        no.jervell.view.awt.Image bonus_1 = ImageFactory.createImage("bonus_1.jpg");
 
         java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         rows.add(new WheelView.Row(0,
                                    bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
         rows.add(new WheelView.Row(1,
                                    bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(2,
-                                   bonus_1 != ImageFactory.BLANK ? bonus_1 : ImageFactory.createStaticImage(
-                                           "joakim_lystad.jpg")));
         return rows;
     }
 
     private no.jervell.view.awt.Label createDateLabel(int date) {
         no.jervell.view.awt.Label label = createLabel(String.valueOf(date));
-        label.setFont(boldFont);
+        label.setFont(BOLD_FONT);
         return label;
     }
 
@@ -230,9 +227,9 @@ public class MainWindow implements WindowListener {
 
     private no.jervell.view.awt.Label createLabel(String text) {
         no.jervell.view.awt.Label label = new no.jervell.view.awt.Label(text);
-        label.setPaint(textPaint);
+        label.setPaint(TEXT_COLOUR);
         label.setAnchor(Anchor.CENTER);
-        label.setFont(plainFont);
+        label.setFont(PLAIN_FONT);
         return label;
     }
 
@@ -249,7 +246,7 @@ public class MainWindow implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
@@ -260,26 +257,26 @@ public class MainWindow implements WindowListener {
 
     @Override
     public void windowClosed(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

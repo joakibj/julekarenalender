@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
-//TODO: Big class, need to split it up!
 public class Julekarenalender {
     // JCommander parameters
     @Parameter(description = "[Liste av tall med hvilke dager det skal foregå trekning]")
