@@ -1,6 +1,6 @@
 package no.jervell.repository.impl;
 
-import static no.jervell.util.CSVStringBuilder.getCSVStringBuilder;
+import static no.jervell.util.builder.CSVStringBuilder.getCSVStringBuilder;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
