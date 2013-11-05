@@ -7,6 +7,8 @@ Features:
 * One-armed bandit style wheel with random winner draw
 * Bonus wheel for custom purpose
 
+All active development takes place in the `develop` branch. Stable releases are merged to `master` and tagged.
+
 Prerequisites
 -------------
 
@@ -93,6 +95,20 @@ Roadmap
 ######v2.1.0
 
 - [ ] Swing/AWT GUI swapped with ScalaFX
+
+Contributing
+------------
+
+Pull requests are always welcome. :-)
+
+How you can contribute:
+
+* Implement missing items on the Roadmap
+* Graphics
+* Feature requests
+* Report bugs
+
+To contribute code: fork `develop`, create your own `feature/branch`, submit a pull request
 
 Trivia
 ------
