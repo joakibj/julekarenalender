@@ -7,6 +7,8 @@ Features:
 * One-armed bandit style wheel with random winner draw
 * Bonus wheel for custom purpose
 
+The purpose of this project is to cooperate on writing code and migrate a desktop application from Java to Scala.
+
 All active development takes place in the `develop` branch. Stable releases are merged to `master` and tagged.
 
 Prerequisites
@@ -81,6 +83,8 @@ TODO: Write this in english when it is ready
 
 Roadmap
 -------
+
+Goal: Migrate application from Java to Scala and play with new technologies along the way.
 
 ######v2.0.0
 
