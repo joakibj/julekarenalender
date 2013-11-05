@@ -4,7 +4,7 @@
 
     <groupId>no.jervell</groupId>
     <artifactId>julekarenalender</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>Julekarenalender</name>
