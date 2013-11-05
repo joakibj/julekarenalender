@@ -20,8 +20,8 @@ public class ImageFactory {
         try {
             URI uri = ImageFactory.class.getClassLoader().getResource(staticImageResourceFolder + name).toURI();
             return loadGenericImage(uri);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            SimpleLogger.getInstance().error("Could not load image: " + name);
             return BLANK;
         }
     }

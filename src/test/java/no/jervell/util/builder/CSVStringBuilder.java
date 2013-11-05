@@ -1,4 +1,4 @@
-package no.jervell.util;
+package no.jervell.util.builder;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,9 @@
 package no.jervell.jul;
 
 import no.jervell.domain.Person;
+import no.jervell.repository.PersonDAO;
 import no.jervell.repository.impl.DefaultPersonDAO;
+import no.jervell.view.MainWindow;
 import no.jervell.view.animation.Animation;
 import no.jervell.view.animation.impl.WheelAnimation;
 import no.jervell.view.animation.impl.WheelRowAnimator;
@@ -49,7 +51,7 @@ import java.util.ArrayList;
 public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinner.Target {
     private enum State {INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED}
 
-    private DefaultPersonDAO personDAO;
+    private PersonDAO personDAO;
     private Script script;
     private State state;
 
@@ -59,21 +61,21 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     private WheelView bonus;
     private WheelRowAnimator blink;
 
-    public GameLogic(int[] days, Julekarenalender julekarenalender) {
-        this.personDAO = julekarenalender.personDAO;
-        this.date = julekarenalender.dateWheel;
-        this.person = julekarenalender.personWheel;
-        this.bonus = julekarenalender.bonusWheel;
+    public GameLogic(int[] days, PersonDAO personDAO, MainWindow mainWindow) {
+        this.personDAO = personDAO;
+        this.date = mainWindow.dateWheel;
+        this.person = mainWindow.personWheel;
+        this.bonus = mainWindow.bonusWheel;
         this.blink = new WheelRowAnimator(person);
         this.script = new Script(days);
-        populatePerson(julekarenalender);
+        populatePerson(mainWindow);
         setState(State.INIT);
     }
 
-    private void populatePerson(Julekarenalender julekarenalender) {
+    private void populatePerson(MainWindow mainWindow) {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>(person.getRows());
         for (Person p : script.getPersonList()) {
-            rows.add(new WheelView.Row(p, julekarenalender.createPersonWheelRow(p)));
+            rows.add(new WheelView.Row(p, mainWindow.createPersonWheelRow(p)));
         }
         person.setRows(rows);
     }

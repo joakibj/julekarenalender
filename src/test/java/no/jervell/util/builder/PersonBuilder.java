@@ -1,4 +1,4 @@
-package no.jervell.util;
+package no.jervell.util.builder;
 
 import no.jervell.domain.Person;
 
