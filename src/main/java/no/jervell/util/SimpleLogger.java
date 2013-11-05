@@ -4,7 +4,8 @@ public class SimpleLogger {
     private boolean debug = false;
     private boolean info = false;
 
-    private SimpleLogger() { }
+    private SimpleLogger() {
+    }
 
     private static class SimpleLoggerHolder {
         public static final SimpleLogger INSTANCE = new SimpleLogger();
@@ -23,18 +24,18 @@ public class SimpleLogger {
     }
 
     public void debug(String text) {
-        if(debug) {
+        if (debug) {
             System.out.println(text);
         }
     }
 
     public void info(String text) {
-        if(info) {
+        if (info) {
             System.out.println(text);
         }
     }
 
     public void error(String text) {
-        System.out.println(text);
+        System.err.println(text);
     }
 }

@@ -21,7 +21,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/src/main/resources/example/img/</directory>
+            <directory>${project.basedir}/src/test/resources/images/</directory>
             <outputDirectory>/img</outputDirectory>
             <includes>
                 <include>*.jpg</include>

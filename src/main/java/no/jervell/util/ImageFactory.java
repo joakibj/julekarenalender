@@ -1,7 +1,7 @@
 package no.jervell.util;
 
-import no.jervell.awt.Anchor;
-import no.jervell.awt.Image;
+import no.jervell.view.awt.Anchor;
+import no.jervell.view.awt.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,8 +20,8 @@ public class ImageFactory {
         try {
             URI uri = ImageFactory.class.getClassLoader().getResource(staticImageResourceFolder + name).toURI();
             return loadGenericImage(uri);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            SimpleLogger.getInstance().error("Could not load image: " + name);
             return BLANK;
         }
     }
