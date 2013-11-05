@@ -161,6 +161,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         switch (state) {
             case WAIT_FOR_PERSON:
                 blink.start(script.getPerson());
+                person.setEnabled(false);
                 bonus.setEnabled(true);
                 setState(State.WINNER);
                 break;
