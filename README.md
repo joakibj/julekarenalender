@@ -1,19 +1,48 @@
 Julekarenalender v2.0.0
-=============
+=======================
 
-De første versjonene av Julekarenalenderen ble utviklet og vedlikeholdt av Arne C. Jervell på NAV Arena prosjektet med Visma Consulting (den gang TietoEnator) som hovedleverandør og Computas som underleverandør. Julekarenalenderen har blitt brukt i mange år på NAV Arena, hvor både leverandør og kunde har fått være med på trekning.
+Julekarenalender is a secret santa desktop application written in Java and Scala. It is adapted for the holidays, but can be used for any purpose that involves random drawing of winners. It is ideal for a project team or office with access to a TV connected with a computer.
 
-Senere versjoner har blitt vedlikeholdt av Esben Stenwig (Visma Consulting) og Lotta Nordling (Computas).
+Features:
+* One-armed bandit style wheel with random winner draw
+* Bonus wheel for custom purpose
 
-Siste oppdateringer er gjort av Joakim Bjørnstad (Visma Consulting).
+Prerequisites
+-------------
 
-Bygging
------------
-* Bygg og pakk applikasjonen med **mvn clean install assembly:single**
-* Bygget pakkes som en zip-fil i target mappen
+The tools needed to build julekarenalender are:
 
-Konfigurasjon
------------
+* Java 6 JRE
+* [sbt](http://www.scala-sbt.org/)
+
+`sbt` will fetch itself and the required Scala compiler.
+
+Building
+--------
+
+Start sbt with:
+
+    sbt
+
+The following commands are used in the `sbt` command prompt.
+
+Compile and run tests with:
+
+    compile
+
+    test
+
+Build the application distributable with:
+
+    assembly
+
+The packaged .jar can be found in `julekarenalender\target\scala-2.10`
+
+Configuration
+-------------
+
+TODO: Write this in english when it is ready
+
 1. Extract zip-filen i target mappen til ønsket sted
 1. Samle sammen bilder som representerer alle i teamet i **jpg** format
 1. Endre julekarenalender.csv
@@ -28,8 +57,11 @@ Konfigurasjon
   * bonus1.jpg overstyrer et bilde av en pakke
   * bonus_1.jpg overstyrer et bilde av Joakim Lystad (NAV direktør)
 
-Bruksanvisning
------------
+Usage
+-----
+
+TODO: Write this in english when it is ready
+
 1. Julekarenalenderen kan startes på to måter, avhengig av bruk:
   * **Én trekning per dag:** Dobbelklikk på jar fil i mappen som er inneholdt i zip-filen
   * **Flere trekninger på en dag:**
@@ -44,3 +76,33 @@ Bruksanvisning
   * På Arena ble bonushjulet brukt til å få bonusgave hvis man fikk bildet av pakken. Her er det åpent for andre ritualer, avhengig av teamet. Det kan være et bilde for gevinst eller "straff"
 1. Etter at bonushjulet har landet, blir vinneren for dagen registrert i csv filen. Man får ikke snurre på nytt
 1. De som tidligere har fått gave (har fått registert dag nummer i csv filen) blir utelatt i hjulet for videre trekninger
+
+Roadmap
+-------
+
+######v2.0.0
+
+- [x] Migrated from maven to sbt
+- [ ] SQLite as persistent datastore instead of CSV
+- [ ] Slick integration with persistent datastore, as the Configuration repository
+- [ ] Configuration module UI to set up participants and track winners. TBD, either command-line based, webapp or GUI module.
+- [ ] Supply self-contained jar that has a minimum set of configuration to run
+- [x] Package jar with dependencies
+- [ ] Features needed for holidays 2013
+
+######v2.1.0
+
+- [ ] Swing/AWT GUI swapped with ScalaFX
+
+Trivia
+------
+
+This application has been used for several years at the NAV Arena project during the holidays. The first versions was created by Arne C. Jervell.
+
+In 2012 and 2013 it is used at the NAV BA project.
+
+
+License
+-------
+
+To Be Determined
