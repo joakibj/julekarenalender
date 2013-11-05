@@ -4,7 +4,7 @@ assemblySettings
 
 jarName in assembly <<= (name, version) map { (name, version) => name + "-" + version + ".jar" }
 
-mainClass in assembly := Some("no.jervell.jul.Julekarenalender")
+mainClass in assembly := Some("com.github.julekarenalender.Main")
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) {
   (old) => {
