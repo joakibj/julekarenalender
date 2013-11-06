@@ -42,4 +42,15 @@ class SQLiteParticipantRepository extends ParticipantRepository with SQLiteDatab
         Query(Participants).delete
     }
   }
+
+  def update(t: T) {
+    database withSession {
+      implicit session: Session =>
+        val query = for {
+          p <- Participants
+          if p.id === t.id
+        } yield p
+        query.update(t)
+    }
+  }
 }

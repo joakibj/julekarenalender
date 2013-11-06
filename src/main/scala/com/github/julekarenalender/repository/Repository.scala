@@ -9,4 +9,5 @@ trait Repository {
   def insertAll(lt: List[T])
   def delete(id: Int)
   def deleteAll()
+  def update(t: T)
 }

@@ -48,8 +48,8 @@ class SQLiteParticipantRepositorySpec extends FlatSpec with ShouldMatchers with 
     )
 
     repo.insertAll(toBeInserted)
-    val participants = repo.findAll()
 
+    val participants = repo.findAll()
     participants should have size (3)
   }
 
@@ -57,8 +57,8 @@ class SQLiteParticipantRepositorySpec extends FlatSpec with ShouldMatchers with 
     val id = repo.insert(Participant(None, "Bjarne", "Bjarne.jpg", 0))
 
     repo.delete(id)
-    val participants = repo.findAll()
 
+    val participants = repo.findAll()
     participants should be ('empty)
   }
 
@@ -66,8 +66,17 @@ class SQLiteParticipantRepositorySpec extends FlatSpec with ShouldMatchers with 
     val id = repo.insert(Participant(None, "Bjarne", "Bjarne.jpg", 0))
 
     repo.delete(id)
-    val participants = repo.findAll()
 
+    val participants = repo.findAll()
     participants should be ('empty)
+  }
+
+  "update" should "update an inserted participant" in {
+    val id = repo.insert(Participant(None, "Bjarne", "Bjarne.jpg", 0))
+
+    repo.update(Participant(Some(id), "Arne", "Arne.jpg", 0))
+
+    val participant = repo.find(id).get
+    participant should be(Participant(Some(id), "Arne", "Arne.jpg", 0))
   }
 }
