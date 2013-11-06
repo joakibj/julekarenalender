@@ -13,6 +13,14 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.1.0"
 
 libraryDependencies += "com.beust" % "jcommander" % "1.29"
 
+libraryDependencies += "com.typesafe.slick" %% "slick" % "1.0.0"
+
+libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.7.15-M1"
+
+libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.6.4"
+
+libraryDependencies += "com.h2database" % "h2" % "1.3.166" % "provided"
+
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % "test"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"

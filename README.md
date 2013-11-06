@@ -4,8 +4,10 @@ Julekarenalender v2.0.0
 Julekarenalender is a secret santa desktop application written in Java and Scala. It is adapted for the holidays, but can be used for any purpose that involves random drawing of winners. It is ideal for a project team or office with access to a TV connected with a computer.
 
 Features:
+
 * One-armed bandit style wheel with random winner draw
 * Bonus wheel for custom purpose
+* User management and winner tracking
 
 The purpose of this project is to cooperate on writing code and migrate a desktop application from Java to Scala.
 
