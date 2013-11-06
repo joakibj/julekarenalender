@@ -1,4 +1,4 @@
-package com.github.julekarenalender
+package com.github.julekarenalender.repository
 
 import java.io.File
 

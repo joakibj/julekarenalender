@@ -1,9 +1,9 @@
-package com.github.julekarenalender
+package com.github.julekarenalender.repository
 
 import scala.slick.driver.SQLiteDriver.simple._
 import scala.slick.session.Database
-import java.io.File
 import scala.slick.jdbc.meta.MTable
+import com.github.julekarenalender.Participant
 
 trait SQLiteDatabaseConfiguration extends DatabaseConfiguration with FileDatabase {
 
@@ -20,21 +20,26 @@ trait SQLiteDatabaseConfiguration extends DatabaseConfiguration with FileDatabas
     database withSession {
       implicit session: Session =>
         val tableNames = MTable.getTables.list().map(_.name.name).toSet
-      println(Query(Participants).list())
         tableNames.contains(Participants.tableName)
     }
   }
 
-  object Participants extends Table[(Int, String, String, Int)]("PARTICIPANTS") {
-    def id = column[Int]("PARTICIPANT_ID", O.PrimaryKey, O.AutoInc)
+  object Participants extends Table[Participant]("PARTICIPANTS") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
-    def name = column[String]("NAME")
+    def name = column[String]("NAME", O.NotNull)
 
-    def image = column[String]("IMAGE_LOCATION")
+    def image = column[String]("IMAGE_LOCATION", O.NotNull)
 
     def win = column[Int]("WIN")
 
-    def * = id ~ name ~ image ~ win
+    def * = id.? ~ name ~ image ~ win <>(Participant, Participant.unapply _)
+
+    def forInsert = name ~ image ~ win <>( {
+      t => Participant(None, t._1, t._2, t._3)
+    }, {
+      (p: Participant) => Some((p.name, p.image, p.win))
+    })
   }
 
 }

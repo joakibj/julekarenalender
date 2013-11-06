@@ -1,9 +1,6 @@
 package com.github.julekarenalender
 
-import java.io.File
-
-case class Participant(id: Int = 0,
+case class Participant(id: Option[Int] = None,
                        name: String,
-                       image: File,
-                       win: Int) {
-}
+                       image: String,
+                       win: Int)
