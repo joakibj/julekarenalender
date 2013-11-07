@@ -4,22 +4,22 @@ import scala.slick.driver.SQLiteDriver.simple._
 
 class SQLiteParticipantRepository extends ParticipantRepository with SQLiteDatabaseConfiguration {
 
-  def find(id: Int): Option[T] = database withSession {
+  override def find(id: Int): Option[T] = database withSession {
     implicit session: Session =>
       Query(Participants).where(_.id === id).firstOption
   }
 
-  def findAll(): List[T] = database withSession {
+  override def findAll(): List[T] = database withSession {
     implicit session: Session =>
       Query(Participants).list()
   }
 
-  def insert(t: T): Int = database withSession {
+  override def insert(t: T): Int = database withSession {
     implicit session: Session =>
       Participants.forInsert returning Participants.id insert (t)
   }
 
-  def insertAll(lt: List[T]): Unit = {
+  override def insertAll(lt: List[T]): Unit = {
     database withSession {
       implicit session: Session =>
         lt.foreach {
@@ -29,21 +29,21 @@ class SQLiteParticipantRepository extends ParticipantRepository with SQLiteDatab
     }
   }
 
-  def delete(id: Int) {
+  override def delete(id: Int) {
     database withSession {
       implicit session: Session =>
         Query(Participants).where(_.id === id).delete
     }
   }
 
-  def deleteAll() {
+  override def deleteAll() {
     database withSession {
       implicit session: Session =>
         Query(Participants).delete
     }
   }
 
-  def update(t: T) {
+  override def update(t: T) {
     database withSession {
       implicit session: Session =>
         val query = for {

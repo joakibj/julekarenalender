@@ -9,14 +9,14 @@ trait SQLiteDatabaseConfiguration extends DatabaseConfiguration with FileDatabas
 
   def database = Database.forURL(connUrl, driver = "org.sqlite.JDBC")
 
-  def runDdl {
+  override def runDdl {
     database withSession {
       implicit session: Session =>
         (Participants.ddl).create
     }
   }
 
-  def hasRunDdl: Boolean = {
+  override def hasRunDdl: Boolean = {
     database withSession {
       implicit session: Session =>
         val tableNames = MTable.getTables.list().map(_.name.name).toSet
