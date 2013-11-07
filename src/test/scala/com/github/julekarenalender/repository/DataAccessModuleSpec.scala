@@ -5,7 +5,7 @@ import java.io.File
 import com.github.julekarenalender.Participant
 import scala.slick.driver.SQLiteDriver
 
-class SQLiteParticipantRepositorySpec extends FlatSpec with ShouldMatchers with BeforeAndAfter {
+class DataAccessModuleSpec extends FlatSpec with ShouldMatchers with BeforeAndAfter {
   val repo = new DataAccessModule(H2())
 
   before {
