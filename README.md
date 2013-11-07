@@ -88,12 +88,13 @@ To contribute code: fork `develop`, create your own `feature/branch`, submit a p
 Trivia
 ------
 
-This application has been used for several years at the NAV Arena project during the holidays. The first versions was created by Arne C. Jervell.
+This application has been used for several years at the NAV Arena project during the holidays from 2008-2011. The first versions was created by Arne C. Jervell.
 
 In 2012 and 2013 it is used at the NAV BA project.
-
 
 License
 -------
 
-To Be Determined
+MIT License.
+
+Please see the LICENSE file for the license text in verbatim.
