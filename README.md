@@ -11,6 +11,8 @@ The purpose of this project is to cooperate on writing code, learning Scala and 
 
 All active development takes place in the `develop` branch. Stable releases are merged to `master` and tagged.
 
+The last stable release was v1.3 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v1.3).
+
 Prerequisites
 -------------
 
