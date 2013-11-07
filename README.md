@@ -7,7 +7,7 @@ Features:
 * One-armed bandit style wheel with random winner draw
 * Bonus wheel for custom purpose
 
-The purpose of this project is to cooperate on writing code and migrate a desktop application from Java to Scala.
+The purpose of this project is to cooperate on writing code, learning Scala and migrate a desktop application from Java to Scala.
 
 All active development takes place in the `develop` branch. Stable releases are merged to `master` and tagged.
 
@@ -60,8 +60,8 @@ Goal: Migrate application from Java to Scala and play with new technologies alon
 ######v2.0.0
 
 - [x] Migrated from maven to sbt
-- [ ] SQLite as persistent datastore instead of CSV
-- [ ] Slick integration with persistent datastore, as the Configuration repository
+- [/] SQLite as persistent datastore instead of CSV
+- [/] Slick integration with persistent datastore, as the Configuration repository
 - [ ] Configuration module UI to set up participants and track winners. TBD, either command-line based, webapp or GUI module.
 - [ ] Supply self-contained jar that has a minimum set of configuration to run
 - [x] Package jar with dependencies
@@ -85,12 +85,19 @@ How you can contribute:
 
 To contribute code: fork `develop`, create your own `feature/branch`, submit a pull request
 
-Trivia
-------
+History
+-------
 
-This application has been used for several years at the NAV Arena project during the holidays from 2008-2011. The first versions was created by Arne C. Jervell.
+Julekarenalender was created by Arne C. Jervell in 2008 as a Java project.
 
-In 2012 and 2013 it is used at the NAV BA project.
+It has been used for several years at the NAV Arena project during the holidays from 2008-2011. In 2012-2013 it was used at the NAV Brev&Arkiv project.
+
+The current maintainer is Joakim Bjørnstad who is porting the application to Scala.
+
+Other contributors:
+
+* Esben Stenwig
+* Lotta Nordling
 
 License
 -------
