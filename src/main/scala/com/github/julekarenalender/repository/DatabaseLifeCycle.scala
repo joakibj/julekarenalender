@@ -1,9 +1,7 @@
 package com.github.julekarenalender.repository
 
-import scala.slick.session.Database
 
-trait DatabaseConfiguration {
-  def database: Database
+trait DatabaseLifeCycle {
   protected def hasRunDdl: Boolean
   protected def runDdl(): Unit
 
