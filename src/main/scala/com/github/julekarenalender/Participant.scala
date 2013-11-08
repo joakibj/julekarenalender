@@ -1,6 +1,6 @@
 package com.github.julekarenalender
 
-case class Participant(id: Option[Int] = None,
-                       name: String,
-                       image: String,
-                       win: Int)
+case class Participant(var id: Option[Int] = None,
+                       var name: String,
+                       var image: String,
+                       var win: Int)

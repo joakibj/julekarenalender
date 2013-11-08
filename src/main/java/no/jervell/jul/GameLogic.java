@@ -1,20 +1,21 @@
 package no.jervell.jul;
 
-import no.jervell.domain.Person;
-import no.jervell.repository.PersonDAO;
-import no.jervell.repository.impl.DefaultPersonDAO;
+import com.github.julekarenalender.ConfigurationModule;
+import com.github.julekarenalender.Participant;
+import no.jervell.util.SimpleLogger;
 import no.jervell.view.MainWindow;
 import no.jervell.view.animation.Animation;
+import no.jervell.view.animation.impl.DefaultTimer;
 import no.jervell.view.animation.impl.WheelAnimation;
 import no.jervell.view.animation.impl.WheelRowAnimator;
 import no.jervell.view.animation.impl.WheelSpinner;
-import no.jervell.view.animation.impl.DefaultTimer;
 import no.jervell.view.swing.WheelView;
-import no.jervell.util.SimpleLogger;
+import scala.Option;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 
 /**
  * INIT:
@@ -51,7 +52,7 @@ import java.util.ArrayList;
 public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinner.Target {
     private enum State {INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED}
 
-    private PersonDAO personDAO;
+    private ConfigurationModule configurationModule;
     private Script script;
     private State state;
 
@@ -61,8 +62,8 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     private WheelView bonus;
     private WheelRowAnimator blink;
 
-    public GameLogic(int[] days, PersonDAO personDAO, MainWindow mainWindow) {
-        this.personDAO = personDAO;
+    public GameLogic(int[] days, ConfigurationModule configurationModule, MainWindow mainWindow) {
+        this.configurationModule = configurationModule;
         this.date = mainWindow.dateWheel;
         this.person = mainWindow.personWheel;
         this.bonus = mainWindow.bonusWheel;
@@ -74,7 +75,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
     private void populatePerson(MainWindow mainWindow) {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>(person.getRows());
-        for (Person p : script.getPersonList()) {
+        for (Participant p : script.getParticipantList()) {
             rows.add(new WheelView.Row(p, mainWindow.createPersonWheelRow(p)));
         }
         person.setRows(rows);
@@ -125,13 +126,13 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         switch (state) {
             case WAIT_FOR_PERSON:
                 if (view == person) {
-                    return script.getPerson();
+                    return script.getParticipant();
                 }
                 break;
 
             case WINNER:
                 if (view == person) {
-                    return script.replacePerson();
+                    return script.replaceParticipant();
                 } else if (view == bonus) {
                     return script.randomBonusIndex();
                 }
@@ -160,7 +161,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         SimpleLogger.getInstance().debug("--- spin stopped");
         switch (state) {
             case WAIT_FOR_PERSON:
-                blink.start(script.getPerson());
+                blink.start(script.getParticipant());
                 person.setEnabled(false);
                 bonus.setEnabled(true);
                 setState(State.WINNER);
@@ -182,7 +183,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         if (state == State.FINISHED ||
                 state == State.WINNER) {
             try {
-                personDAO.persist();
+                configurationModule.syncParticipantsJava(script.getParticipantList());
             } catch (Exception e) {
                 SimpleLogger.getInstance().error("Unable to persist data. Reason: " + e);
             }
@@ -193,33 +194,33 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     private class Script {
         private int pos;
         private int[] days;
-        private Person[] winners;
-        private List<Person> queue;
-        private List<Person> personList;
+        private Participant[] winners;
+        private List<Participant> queue;
+        private List<Participant> personList;
 
         public Script(int[] days) {
             this.days = days;
-            this.winners = new Person[days.length];
+            this.winners = new Participant[days.length];
             this.pos = 0;
             init();
         }
 
         private void init() {
-            personList = getFilteredList(personDAO.getPersonList(), getFirstDay());
-            queue = new ArrayList<Person>(personList);
+            personList = getFilteredList(configurationModule.getParticipantsJava(), getFirstDay());
+            queue = new ArrayList<Participant>(personList);
             for (int i = 0; i < days.length; ++i) {
                 winners[i] = pickWinner(days[i], queue);
             }
         }
 
-        public List<Person> getPersonList() {
+        public List<Participant> getParticipantList() {
             return personList;
         }
 
-        private List<Person> getFilteredList(List<Person> list, int minDay) {
-            List<Person> result = new ArrayList<Person>();
-            for (Person p : list) {
-                if (p.getDay() == 0 || p.getDay() >= minDay) {
+        private List<Participant> getFilteredList(Collection<Participant> list, int minDay) {
+            List<Participant> result = new ArrayList<Participant>();
+            for (Participant p : list) {
+                if (p.win() == 0 || p.win() >= minDay) {
                     result.add(p);
                 }
             }
@@ -237,22 +238,20 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             return min;
         }
 
-        private Person pickWinner(int day, List<Person> queue) {
-            Person winner = extractRiggedWinner(day, queue);
+        private Participant pickWinner(int day, List<Participant> queue) {
+            Participant winner = extractRiggedWinner(day, queue);
             if (winner == null) {
                 winner = extractRandomWinner(day, queue);
             }
             if (winner == null) {
-                winner = new Person();
-                winner.setDay(day);
-                winner.setName("NOBODY");
+                winner = new Participant(Option.apply(null), "NOBODY", null, day);
             }
             return winner;
         }
 
-        private Person extractRiggedWinner(int day, List<Person> queue) {
-            for (Person p : queue) {
-                if (p.getDay() == day) {
+        private Participant extractRiggedWinner(int day, List<Participant> queue) {
+            for (Participant p : queue) {
+                if (p.win() == day) {
                     queue.remove(p);
                     return p;
                 }
@@ -260,32 +259,32 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             return null;
         }
 
-        private Person extractRandomWinner(int day, List<Person> queue) {
+        private Participant extractRandomWinner(int day, List<Participant> queue) {
             if (queue.size() > 0) {
-                Person p = queue.remove(rnd.nextInt(queue.size()));
-                p.setDay(day);
+                Participant p = queue.remove(rnd.nextInt(queue.size()));
+                p.win_$eq(day);
                 return p;
             }
             return null;
         }
 
         public int getDay() {
-            return date.getIndex(winners[pos].getDay());
+            return date.getIndex(winners[pos].win());
         }
 
         public int getNextDay() {
-            return date.getIndex(winners[pos + 1].getDay());
+            return date.getIndex(winners[pos + 1].win());
         }
 
-        public int getPerson() {
+        public int getParticipant() {
             return person.getIndex(winners[pos]);
         }
 
-        public int replacePerson() {
-            Person oldPerson = winners[pos];
-            winners[pos] = extractRandomWinner(oldPerson.getDay(), queue);
-            oldPerson.setDay(0);
-            return getPerson();
+        public int replaceParticipant() {
+            Participant oldParticipant = winners[pos];
+            winners[pos] = extractRandomWinner(oldParticipant.win(), queue);
+            oldParticipant.win_$eq(0);
+            return getParticipant();
         }
 
         public int randomBonusIndex() {
