@@ -10,9 +10,11 @@ import no.jervell.repository.impl.{DefaultPersonDAO, CSVFile}
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false)
 
 object Main extends App {
+  val ProgramName = "Julekarenalender"
+  val Version = "2.0.0-SNAPSHOT"
 
   val parser = new scopt.OptionParser[Config]("julekarenalender") {
-    head("Julekarenalender", "2.0.0")
+    head(ProgramName, Version)
     arg[String]("days") unbounded() optional() action {
       (x, c) =>
         c.copy(days = c.days :+ x)
@@ -34,7 +36,7 @@ object Main extends App {
   }
 
   private def runMainWindow(config: Config) {
-    new MainWindow(parseDays(config), loadDataSource()).display()
+    new MainWindow(parseDays(config), initConfigurationModule()).display()
   }
 
   private def parseDays(config: Config): Array[Int] = {
@@ -42,10 +44,9 @@ object Main extends App {
     return dayParser.parse
   }
 
-  private def loadDataSource() = {
-    val resourceFile: File = new File(".", "julekarenalender.csv")
-    SimpleLogger.getInstance.info("Loading configuration from: " + resourceFile)
-    val dataSource: CSVFile = new CSVFile(resourceFile, true)
-    new DefaultPersonDAO(dataSource)
+  private def initConfigurationModule() = {
+    val configModule = new DefaultConfigurationModule
+    configModule.importParticipantsFromCsv()
+    configModule
   }
 }

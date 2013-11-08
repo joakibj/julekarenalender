@@ -1,9 +1,9 @@
 package no.jervell.view;
 
-import no.jervell.domain.Person;
+import com.github.julekarenalender.ConfigurationModule;
+import com.github.julekarenalender.Main;
+import com.github.julekarenalender.Participant;
 import no.jervell.jul.GameLogic;
-import no.jervell.jul.Julekarenalender;
-import no.jervell.repository.PersonDAO;
 import no.jervell.util.ImageFactory;
 import no.jervell.view.animation.impl.AnimationLoop;
 import no.jervell.view.animation.impl.FrameCounter;
@@ -40,7 +40,7 @@ public class MainWindow implements WindowListener {
     private AnimationLoop loop;
     private JFrame frame;
     private int[] days;
-    private PersonDAO personDAO;
+    private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
 
     //TODO: Split up further into a seperate class encapsulating Wheel functionality
@@ -54,9 +54,9 @@ public class MainWindow implements WindowListener {
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
 
-    public MainWindow(int[] days, PersonDAO personDAO) {
+    public MainWindow(int[] days, ConfigurationModule configurationModule) {
         this.days = days;
-        this.personDAO = personDAO;
+        this.configurationModule = configurationModule;
         buildWindow();
     }
 
@@ -87,7 +87,7 @@ public class MainWindow implements WindowListener {
         loop = new AnimationLoop();
         personWheelSpinner = new WheelSpinner(personWheelAnimation, MAX_VELOCITY);
         bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, MAX_VELOCITY);
-        gameLogic = new GameLogic(days, personDAO, this);
+        gameLogic = new GameLogic(days, configurationModule, this);
 
         loop.setAnimations(personWheelAnimation, bonusWheelAnimation, gameLogic);
     }
@@ -155,7 +155,7 @@ public class MainWindow implements WindowListener {
 
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
-        frame.setTitle(Julekarenalender.PROGRAM_NAME);
+        frame.setTitle(Main.ProgramName());
         frame.getContentPane().setBackground(FRAME_BACKGROUND);
         return frame;
     }
@@ -193,9 +193,9 @@ public class MainWindow implements WindowListener {
         return rows;
     }
 
-    public ImageLabel createPersonWheelRow(Person p) {
-        no.jervell.view.awt.Image img = ImageFactory.createImage(p.getPicture());
-        no.jervell.view.awt.Label lbl = createPersonLabel(p.getName());
+    public ImageLabel createPersonWheelRow(Participant p) {
+        no.jervell.view.awt.Image img = ImageFactory.createImage(p.image());
+        no.jervell.view.awt.Label lbl = createPersonLabel(p.name());
         lbl.setAnchor(Anchor.LEFT_CENTER);
         return new ImageLabel(img, lbl);
     }
