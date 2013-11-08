@@ -11,7 +11,7 @@ trait ParticipantRepository extends UsingDatabaseConnection {
 
     def name = column[String]("NAME", O.NotNull)
 
-    def image = column[String]("IMAGE_LOCATION", O.NotNull)
+    def image = column[String]("IMAGE_NAME", O.NotNull)
 
     def win = column[Int]("WIN")
 

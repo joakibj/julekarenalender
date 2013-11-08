@@ -11,7 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ImageFactory {
-    private static String localImageFolder = "." + File.separator + "img";
+    private static String localImageFolder = "." + File.separator + "images";
     private static String staticImageResourceFolder = "static/images/";
     private static Color blankColor = Color.white;
     public final static Image BLANK = createBlankImage();
