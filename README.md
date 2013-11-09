@@ -83,6 +83,7 @@ Pull requests are always welcome. :-)
 How you can contribute:
 
 * Implement missing items on the Roadmap
+* Make the project more *idiomatic Scala*
 * Graphics
 * Feature requests
 * Report bugs
