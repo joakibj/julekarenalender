@@ -12,7 +12,7 @@ trait ConfigurationModule extends JavaCompatibility {
 
   def createParticipants(participants: List[Participant]): Try[Unit]
 
-  def importParticipantsFromCsv(): Try[Unit]
+  def importParticipants(): Try[Unit]
 
   protected[this] def scanParticipants: List[Participant]
 }

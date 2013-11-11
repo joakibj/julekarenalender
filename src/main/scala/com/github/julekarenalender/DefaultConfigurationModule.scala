@@ -4,8 +4,6 @@ import scala.collection.JavaConverters._
 import scala.util.{Success, Try}
 import java.io.File
 import no.jervell.util.SimpleLogger
-import no.jervell.repository.impl.{DefaultPersonDAO, CSVFile}
-import no.jervell.domain.Person
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
 
 class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule {
@@ -61,7 +59,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     Try(dataAccess.Participants.insertAll(participants))
   }
 
-  def importParticipantsFromCsv(): Try[Unit] = {
+  def importParticipants(): Try[Unit] = {
     val participants = scanParticipants
     if (participants.map(_.name) != getParticipants.map(_.name)) {
       createParticipants(participants)

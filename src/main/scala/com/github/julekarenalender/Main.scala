@@ -4,10 +4,8 @@ import scala.collection.JavaConversions._
 import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
 import no.jervell.jul.DayParser
-import java.io.File
-import no.jervell.repository.impl.{DefaultPersonDAO, CSVFile}
 
-case class Config(days: Seq[String] = Seq(), debug: Boolean = false)
+case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = true)
 
 object Main extends App {
   val ProgramName = "Julekarenalender"
@@ -19,6 +17,10 @@ object Main extends App {
       (x, c) =>
         c.copy(days = c.days :+ x)
     } text("List of days there should be a draw. Optional")
+    opt[Unit]("scan") optional() action {
+      (_, c) =>
+        c.copy(scan = true)
+    } text("Scans the images/ folder for participants")
     opt[Unit]("debug") optional() action {
       (_, c) =>
         c.copy(debug = true)
@@ -36,7 +38,7 @@ object Main extends App {
   }
 
   private def runMainWindow(config: Config) {
-    new MainWindow(parseDays(config), initConfigurationModule()).display()
+    new MainWindow(parseDays(config), initConfigurationModule(config)).display()
   }
 
   private def parseDays(config: Config): Array[Int] = {
@@ -44,9 +46,9 @@ object Main extends App {
     return dayParser.parse
   }
 
-  private def initConfigurationModule() = {
+  private def initConfigurationModule(config: Config) = {
     val configModule = new DefaultConfigurationModule
-    configModule.importParticipantsFromCsv()
+    if(config.scan) configModule.importParticipants()
     configModule
   }
 }
