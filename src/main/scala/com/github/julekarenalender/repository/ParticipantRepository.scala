@@ -20,7 +20,7 @@ trait ParticipantRepository extends UsingDatabaseConnection {
     def forInsert = name ~ image ~ win <>( {
       t => Participant(None, t._1, t._2, t._3)
     }, {
-      (p: Participant) => Some((p.name, p.image, p.win))
+      (p: Participant) => Some((p.name, p.image, p.daysWon))
     })
 
     def find(id: Int): Option[Participant] = database withSession {

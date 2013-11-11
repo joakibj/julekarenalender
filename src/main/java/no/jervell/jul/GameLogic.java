@@ -220,7 +220,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         private List<Participant> getFilteredList(Collection<Participant> list, int minDay) {
             List<Participant> result = new ArrayList<Participant>();
             for (Participant p : list) {
-                if (p.win() == 0 || p.win() >= minDay) {
+                if (p.daysWon() == 0 || p.daysWon() >= minDay) {
                     result.add(p);
                 }
             }
@@ -251,7 +251,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
         private Participant extractRiggedWinner(int day, List<Participant> queue) {
             for (Participant p : queue) {
-                if (p.win() == day) {
+                if (p.daysWon() == day) {
                     queue.remove(p);
                     return p;
                 }
@@ -262,18 +262,18 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         private Participant extractRandomWinner(int day, List<Participant> queue) {
             if (queue.size() > 0) {
                 Participant p = queue.remove(rnd.nextInt(queue.size()));
-                p.win_$eq(day);
+                p.daysWon_$eq(day);
                 return p;
             }
             return null;
         }
 
         public int getDay() {
-            return date.getIndex(winners[pos].win());
+            return date.getIndex(winners[pos].daysWon());
         }
 
         public int getNextDay() {
-            return date.getIndex(winners[pos + 1].win());
+            return date.getIndex(winners[pos + 1].daysWon());
         }
 
         public int getParticipant() {
@@ -282,8 +282,8 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
         public int replaceParticipant() {
             Participant oldParticipant = winners[pos];
-            winners[pos] = extractRandomWinner(oldParticipant.win(), queue);
-            oldParticipant.win_$eq(0);
+            winners[pos] = extractRandomWinner(oldParticipant.daysWon(), queue);
+            oldParticipant.daysWon_$eq(0);
             return getParticipant();
         }
 
