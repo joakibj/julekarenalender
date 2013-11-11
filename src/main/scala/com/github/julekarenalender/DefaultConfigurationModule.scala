@@ -36,19 +36,27 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def scanParticipants: List[Participant] = {
-    val resourceFile: File = new File(".", "julekarenalender.csv")
-    SimpleLogger.getInstance.info("Loading configuration from: " + resourceFile)
-    val dataSource: CSVFile = new CSVFile(resourceFile, true)
-    val persons = new DefaultPersonDAO(dataSource).getPersonList.asScala.toList
+    val participantImageFilter: (File) => Boolean = (f) => {
+      f.getName.split('.').drop(1).lastOption match {
+        case Some("png") | Some("jpg") => true
+        case None => false
+      }
+    }
+
+    SimpleLogger.getInstance.info("Scanning images/ and importing participants.")
+
+    val participantImages = new File(".", "images").listFiles().toList.filter(participantImageFilter)
 
     val participants =
       for {
-        p: Person <- persons
-      } yield Participant(None, p.getName, p.getPicture, p.getDay)
+        f: File <- participantImages
+      } yield Participant(None, f.getName.split('.').dropRight(1).head, f.getName, 0)
+
     participants
   }
 
   def createParticipants(participants: List[Participant]): Try[Unit] = {
+    SimpleLogger.getInstance.info(s"Creating ${participants.size} participants.")
     Try(dataAccess.Participants.insertAll(participants))
   }
 
