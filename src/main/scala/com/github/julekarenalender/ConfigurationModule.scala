@@ -4,7 +4,7 @@ import scala.util.Try
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
 
 trait ConfigurationModule extends JavaCompatibility {
-  protected val dataAccess = new DataAccessModule(SQLite())
+  protected[this] val dataAccess: DataAccessModule
 
   def getParticipants: List[Participant]
 
