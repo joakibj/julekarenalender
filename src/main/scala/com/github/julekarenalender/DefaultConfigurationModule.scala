@@ -40,6 +40,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
       f.getName.split('.').drop(1).lastOption match {
         case Some("png") | Some("jpg") => true
         case None => false
+        case _ => false
       }
     }
 
