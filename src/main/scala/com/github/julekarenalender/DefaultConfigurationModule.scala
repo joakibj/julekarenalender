@@ -4,8 +4,6 @@ import scala.collection.JavaConverters._
 import scala.util.{Success, Try}
 import java.io.File
 import no.jervell.util.SimpleLogger
-import no.jervell.repository.impl.{DefaultPersonDAO, CSVFile}
-import no.jervell.domain.Person
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
 
 class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule {
@@ -28,7 +26,6 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def syncParticipants(participants: List[Participant]): Try[Unit] = {
-    println(participants)
     Try(participants.foreach {
       p =>
         dataAccess.Participants.update(p)
@@ -36,26 +33,37 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def scanParticipants: List[Participant] = {
-    val resourceFile: File = new File(".", "julekarenalender.csv")
-    SimpleLogger.getInstance.info("Loading configuration from: " + resourceFile)
-    val dataSource: CSVFile = new CSVFile(resourceFile, true)
-    val persons = new DefaultPersonDAO(dataSource).getPersonList.asScala.toList
+    val participantImageFilter: (File) => Boolean = (f) => {
+      f.getName.split('.').drop(1).lastOption match {
+        case Some("png") | Some("jpg") => !f.getName.contains("bonus")
+        case None => false
+        case _ => false
+      }
+    }
+
+    SimpleLogger.getInstance.info("Scanning images/ and importing participants.")
+
+    val participantImages = new File(".", "images").listFiles().toList.filter(participantImageFilter)
 
     val participants =
       for {
-        p: Person <- persons
-      } yield Participant(None, p.getName, p.getPicture, p.getDay)
+        f: File <- participantImages
+      } yield Participant(None, f.getName.split('.').dropRight(1).head, f.getName, 0)
+
     participants
   }
 
-  def createParticipants(participants: List[Participant]): Try[Unit] = {
-    Try(dataAccess.Participants.insertAll(participants))
+  def createParticipants(participants: List[Participant]): List[Int] = {
+    SimpleLogger.getInstance.info(s"Creating ${participants.size} participants.")
+    dataAccess.Participants.insertAll(participants)
   }
 
-  def importParticipantsFromCsv(): Try[Unit] = {
+  def importParticipants(): Try[Unit] = {
     val participants = scanParticipants
-    if (participants.map(_.name) != getParticipants.map(_.name)) {
-      createParticipants(participants)
+    val persistedParticipants = getParticipants
+    val nameDiff = participants.filter(p => !persistedParticipants.map(_.name).contains(p.name))
+    if (nameDiff.size > 0) {
+      createParticipants(nameDiff)
     }
     Success()
   }

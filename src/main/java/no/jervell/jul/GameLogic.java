@@ -196,7 +196,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         private int[] days;
         private Participant[] winners;
         private List<Participant> queue;
-        private List<Participant> personList;
+        private List<Participant> participants;
 
         public Script(int[] days) {
             this.days = days;
@@ -206,15 +206,15 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
 
         private void init() {
-            personList = getFilteredList(configurationModule.getParticipantsJava(), getFirstDay());
-            queue = new ArrayList<Participant>(personList);
+            participants = getFilteredList(configurationModule.getParticipantsJava(), getFirstDay());
+            queue = new ArrayList<Participant>(participants);
             for (int i = 0; i < days.length; ++i) {
                 winners[i] = pickWinner(days[i], queue);
             }
         }
 
         public List<Participant> getParticipantList() {
-            return personList;
+            return participants;
         }
 
         private List<Participant> getFilteredList(Collection<Participant> list, int minDay) {

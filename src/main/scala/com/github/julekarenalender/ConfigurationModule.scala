@@ -10,9 +10,9 @@ trait ConfigurationModule extends JavaCompatibility {
 
   def syncParticipants(participants: List[Participant]): Try[Unit]
 
-  def createParticipants(participants: List[Participant]): Try[Unit]
+  def createParticipants(participants: List[Participant]): List[Int]
 
-  def importParticipantsFromCsv(): Try[Unit]
+  def importParticipants(): Try[Unit]
 
   protected[this] def scanParticipants: List[Participant]
 }
