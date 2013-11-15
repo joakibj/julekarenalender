@@ -28,7 +28,7 @@ Konfigurasjon
 1. (Valgfritt) Man kan konfigurere de 3 bildene i bonushjulet (det lille hjulet til høyre) ved å legge bilder "bonus0.jpg", "bonus1.jpg" og "bonus_1.jpg" i **img** mappen. På denne måten kan man skreddersy applikasjonen til prosjektet. Hvis ikke disse bildene finnes, vil standard bli brukt:
   * bonus0.jpg overstyrer et bilde av en jokerlue
   * bonus1.jpg overstyrer et bilde av en pakke
-  * bonus_1.jpg overstyrer et bilde av en jokerlue
+  * bonus2.jpg overstyrer et bilde av en jokerlue
 
 Bruksanvisning
 -----------
