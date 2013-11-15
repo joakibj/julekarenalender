@@ -1,7 +1,7 @@
 package com.github.julekarenalender.config
 
 import scala.collection.JavaConverters._
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 import java.io.File
 import no.jervell.util.SimpleLogger
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
@@ -34,6 +34,17 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def scanParticipants: List[Participant] = {
+    SimpleLogger.getInstance.info("Scanning images/ and importing participants...")
+
+    val participants =
+      for {
+        f: File <- participantImages
+      } yield Participant(None, f.getName.split('.').dropRight(1).head, f.getName, 0)
+
+    participants
+  }
+
+  private def participantImages: List[File] = {
     val participantImageFilter: (File) => Boolean = (f) => {
       f.getName.split('.').drop(1).lastOption match {
         case Some("png") | Some("jpg") => !f.getName.contains("bonus")
@@ -42,16 +53,12 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
       }
     }
 
-    SimpleLogger.getInstance.info("Scanning images/ and importing participants.")
-
-    val participantImages = new File(".", "images").listFiles().toList.filter(participantImageFilter)
-
-    val participants =
-      for {
-        f: File <- participantImages
-      } yield Participant(None, f.getName.split('.').dropRight(1).head, f.getName, 0)
-
-    participants
+    Try(new File(".", "images").listFiles().toList.filter(participantImageFilter)) match {
+      case Success(li) => li
+      case Failure(ex) =>
+        SimpleLogger.getInstance().error("Unable to find the folder ./images")
+        Nil
+    }
   }
 
   def createParticipants(participants: List[Participant]): List[Int] = {
