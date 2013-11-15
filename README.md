@@ -1,6 +1,8 @@
 Julekarenalender
 =============
 
+**This README describes the original Java version of Julekarenalender and is written in norwegian.**
+
 De første versjonene av Julekarenalenderen ble utviklet og vedlikeholdt av Arne C. Jervell på NAV Arena prosjektet med Visma Consulting (den gang TietoEnator) som hovedleverandør og Computas som underleverandør. Julekarenalenderen har blitt brukt i mange år på NAV Arena, hvor både leverandør og kunde har fått være med på trekning.
 
 Senere versjoner har blitt vedlikeholdt av Esben Stenwig (Visma Consulting) og Lotta Nordling (Computas).
@@ -26,7 +28,7 @@ Konfigurasjon
 1. (Valgfritt) Man kan konfigurere de 3 bildene i bonushjulet (det lille hjulet til høyre) ved å legge bilder "bonus0.jpg", "bonus1.jpg" og "bonus_1.jpg" i **img** mappen. På denne måten kan man skreddersy applikasjonen til prosjektet. Hvis ikke disse bildene finnes, vil standard bli brukt:
   * bonus0.jpg overstyrer et bilde av en jokerlue
   * bonus1.jpg overstyrer et bilde av en pakke
-  * bonus_1.jpg overstyrer et bilde av Joakim Lystad (NAV direktør)
+  * bonus_1.jpg overstyrer et tredje bilde
 
 Bruksanvisning
 -----------
