@@ -7,6 +7,8 @@ scalaVersion := "2.10.3"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-encoding", "utf8")
 
+fork in Test := true
+
 resolvers += "sonatype-public" at "https://oss.sonatype.org/content/groups/public"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.1.0"
