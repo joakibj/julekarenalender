@@ -17,8 +17,7 @@ import no.jervell.view.swing.WheelView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -40,6 +39,7 @@ public class MainWindow implements WindowListener {
     final static int scale = 125;
     private AnimationLoop loop;
     private JFrame frame;
+    private JMenuBar menuBar;
     private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
@@ -78,6 +78,8 @@ public class MainWindow implements WindowListener {
         personWheel = createPersonWheel();
         bonusWheel = createBonusWheel();
         frame = createMainFrame();
+        menuBar = createMenuBar();
+        frame.setJMenuBar(menuBar);
         header = createImageView(scale > 100 ? "top2x.jpg" : "top.jpg");
         footer = createImageView(scale > 100 ? "logoer2x.jpg" : "logoer.jpg");
     }
@@ -107,6 +109,27 @@ public class MainWindow implements WindowListener {
 
         personWheelSpinner.setTarget(gameLogic);
         bonusWheelSpinner.setTarget(gameLogic);
+
+        frame.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.isAltDown()) {
+                    menuBar.setVisible(true);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(!e.isAltDown()) {
+                    menuBar.setVisible(false);
+                }
+            }
+        });
     }
 
     private void doLayout() {
@@ -156,9 +179,27 @@ public class MainWindow implements WindowListener {
 
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setTitle(AppInfo.title());
         frame.getContentPane().setBackground(FRAME_BACKGROUND);
+
         return frame;
+    }
+
+    private JMenuBar createMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("File");
+
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        file.add(exitMenuItem);
+        menuBar.add(file);
+        menuBar.setVisible(false);
+        return menuBar;
     }
 
     private ImageView createImageView(String file) {
