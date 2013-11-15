@@ -62,13 +62,15 @@ Roadmap
 
 Goal: Migrate application from Java to Scala and play with new technologies along the way.
 
+Please refer to the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open) on github for a more comprehensive overview.
+
 ######v2.0.0
 
 - [x] Migrated from maven to sbt
-- [/] SQLite as persistent datastore instead of CSV
-- [/] Slick integration with persistent datastore, as the Configuration repository
+- [X] SQLite as persistent datastore instead of CSV
+- [X] Slick integration with persistent datastore, as the Configuration repository
 - [ ] Configuration module UI to set up participants and track winners. TBD, either command-line based, webapp or GUI module.
-- [ ] Supply self-contained jar that has a minimum set of configuration to run
+- [/] Supply self-contained jar that has a minimum set of configuration to run
 - [x] Package jar with dependencies
 - [ ] Features needed for holidays 2013
 
@@ -83,7 +85,7 @@ Pull requests are always welcome. :-)
 
 How you can contribute:
 
-* Implement missing items on the Roadmap
+* Implement missing items on the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open).
 * Graphics
 * Feature requests
 * Report bugs
