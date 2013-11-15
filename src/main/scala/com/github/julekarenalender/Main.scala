@@ -4,7 +4,7 @@ import scala.collection.JavaConversions._
 import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
 import no.jervell.jul.DayParser
-import com.github.julekarenalender.config.AppInfo
+import com.github.julekarenalender.config.{DefaultConfigurationModule, AppInfo}
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false)
 

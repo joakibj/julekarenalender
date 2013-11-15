@@ -1,6 +1,6 @@
 package no.jervell.jul;
 
-import com.github.julekarenalender.ConfigurationModule;
+import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.Participant;
 import no.jervell.util.SimpleLogger;
 import no.jervell.view.MainWindow;

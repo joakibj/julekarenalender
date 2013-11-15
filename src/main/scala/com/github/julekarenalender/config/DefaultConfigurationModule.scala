@@ -1,10 +1,11 @@
-package com.github.julekarenalender
+package com.github.julekarenalender.config
 
 import scala.collection.JavaConverters._
 import scala.util.{Success, Try}
 import java.io.File
 import no.jervell.util.SimpleLogger
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
+import com.github.julekarenalender.Participant
 
 class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule {
 

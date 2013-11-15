@@ -1,7 +1,8 @@
-package com.github.julekarenalender
+package com.github.julekarenalender.config
 
 import scala.util.Try
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
+import com.github.julekarenalender.Participant
 
 trait ConfigurationModule extends JavaCompatibility {
   protected[this] val dataAccess: DataAccessModule

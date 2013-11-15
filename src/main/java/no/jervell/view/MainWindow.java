@@ -1,6 +1,6 @@
 package no.jervell.view;
 
-import com.github.julekarenalender.ConfigurationModule;
+import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.Participant;
 import com.github.julekarenalender.config.AppInfo;
 import no.jervell.jul.GameLogic;
