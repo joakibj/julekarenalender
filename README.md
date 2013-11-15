@@ -21,7 +21,7 @@ Prerequisites
 
 The tools needed to build julekarenalender are:
 
-* Java 6 JRE
+* Java 7 JDK
 * [sbt](http://www.scala-sbt.org/)
 
 `sbt` will fetch itself and the required Scala compiler.
