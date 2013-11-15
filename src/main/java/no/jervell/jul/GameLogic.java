@@ -62,7 +62,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     private WheelView bonus;
     private WheelRowAnimator blink;
 
-    public GameLogic(int[] days, ConfigurationModule configurationModule, MainWindow mainWindow) {
+    public GameLogic(List<Integer> days, ConfigurationModule configurationModule, MainWindow mainWindow) {
         this.configurationModule = configurationModule;
         this.date = mainWindow.dateWheel;
         this.person = mainWindow.personWheel;
@@ -193,14 +193,14 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
     private class Script {
         private int pos;
-        private int[] days;
+        private List<Integer> days;
         private Participant[] winners;
         private List<Participant> queue;
         private List<Participant> participants;
 
-        public Script(int[] days) {
+        public Script(List<Integer> days) {
             this.days = days;
-            this.winners = new Participant[days.length];
+            this.winners = new Participant[days.size()];
             this.pos = 0;
             init();
         }
@@ -208,8 +208,8 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         private void init() {
             participants = getFilteredList(configurationModule.getParticipantsJava(), getFirstDay());
             queue = new ArrayList<Participant>(participants);
-            for (int i = 0; i < days.length; ++i) {
-                winners[i] = pickWinner(days[i], queue);
+            for (int i = 0; i < days.size(); ++i) {
+                winners[i] = pickWinner(days.get(i), queue);
             }
         }
 
@@ -228,10 +228,10 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
 
         private int getFirstDay() {
-            if (days == null || days.length == 0) {
+            if (days == null || days.size() == 0) {
                 return 0;
             }
-            int min = days[0];
+            int min = days.get(0);
             for (int val : days) {
                 min = Math.min(min, val);
             }
@@ -292,11 +292,11 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
 
         public boolean hasCurrent() {
-            return pos < days.length;
+            return pos < days.size();
         }
 
         public boolean hasNext() {
-            return pos + 1 < days.length;
+            return pos + 1 < days.size();
         }
 
         public boolean move() {

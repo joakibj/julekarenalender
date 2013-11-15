@@ -19,7 +19,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 public class MainWindow implements WindowListener {
     private static final String FONT_NAME = "Times New Roman";
@@ -39,7 +40,7 @@ public class MainWindow implements WindowListener {
     final static int scale = 125;
     private AnimationLoop loop;
     private JFrame frame;
-    private int[] days;
+    private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
 
@@ -54,7 +55,7 @@ public class MainWindow implements WindowListener {
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
 
-    public MainWindow(int[] days, ConfigurationModule configurationModule) {
+    public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
         this.days = days;
         this.configurationModule = configurationModule;
         buildWindow();

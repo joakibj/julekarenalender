@@ -3,8 +3,8 @@ package com.github.julekarenalender
 import scala.collection.JavaConversions._
 import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
-import no.jervell.jul.DayParser
-import com.github.julekarenalender.config.{DefaultConfigurationModule, AppInfo}
+import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
+import java.util.Calendar
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false)
 
@@ -36,12 +36,7 @@ object Main extends App {
   }
 
   private def runMainWindow(config: Config) {
-    new MainWindow(parseDays(config), initConfigurationModule(config)).display()
-  }
-
-  private def parseDays(config: Config): Array[Int] = {
-    val dayParser: DayParser = new DayParser(config.days.map(_.toString))
-    return dayParser.parse
+    new MainWindow(Parser.toDays(config.days), initConfigurationModule(config)).display()
   }
 
   private def initConfigurationModule(config: Config) = {
