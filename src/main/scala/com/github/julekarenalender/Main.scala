@@ -4,17 +4,13 @@ import scala.collection.JavaConversions._
 import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
 import no.jervell.jul.DayParser
-import java.io.File
-import no.jervell.repository.impl.{DefaultPersonDAO, CSVFile}
+import com.github.julekarenalender.config.AppInfo
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false)
 
 object Main extends App {
-  val ProgramName = "Julekarenalender"
-  val Version = "2.0.0-SNAPSHOT"
-
   val parser = new scopt.OptionParser[Config]("julekarenalender") {
-    head(ProgramName, Version)
+    head(AppInfo.ProgramName, AppInfo.Version)
     arg[String]("days") unbounded() optional() action {
       (x, c) =>
         c.copy(days = c.days :+ x)
