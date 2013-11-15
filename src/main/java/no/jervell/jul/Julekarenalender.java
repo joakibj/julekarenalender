@@ -28,6 +28,7 @@ public class Julekarenalender {
     private boolean help;
 
     public static final String PROGRAM_NAME = "Julekarenalender";
+    public static final String VERSION = "v1.3.1";
 
     private PersonDAO personDAO;
     private MainWindow mainWindow;
@@ -69,5 +70,9 @@ public class Julekarenalender {
         SimpleLogger.getInstance().info("Loading configuration from: " + resourceFile);
         CSVFile dataSource = new CSVFile(resourceFile, true);
         personDAO = new DefaultPersonDAO(dataSource);
+    }
+
+    public static String getTitle() {
+        return PROGRAM_NAME + " " + VERSION;
     }
 }
