@@ -155,7 +155,7 @@ public class MainWindow implements WindowListener {
 
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
-        frame.setTitle(Julekarenalender.PROGRAM_NAME);
+        frame.setTitle(Julekarenalender.getTitle());
         frame.getContentPane().setBackground(FRAME_BACKGROUND);
         return frame;
     }
@@ -165,7 +165,7 @@ public class MainWindow implements WindowListener {
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor),
-                                             dim((int) size.getHeight() / imageReductionFactor)));
+                dim((int) size.getHeight() / imageReductionFactor)));
         return image;
     }
 
@@ -204,12 +204,15 @@ public class MainWindow implements WindowListener {
         // Lookup custom images
         no.jervell.view.awt.Image bonus0 = ImageFactory.createImage("bonus0.jpg");
         no.jervell.view.awt.Image bonus1 = ImageFactory.createImage("bonus1.jpg");
+        no.jervell.view.awt.Image bonus2 = ImageFactory.createImage("bonus2.jpg");
 
         java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         rows.add(new WheelView.Row(0,
-                                   bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
+                bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
         rows.add(new WheelView.Row(1,
-                                   bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
+                bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(2,
+                bonus2 != ImageFactory.BLANK ? bonus2 : ImageFactory.createStaticImage("lue.jpg")));
         return rows;
     }
 
@@ -236,8 +239,9 @@ public class MainWindow implements WindowListener {
     private void center(JFrame frame) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screen = toolkit.getScreenSize();
-        frame.setLocation((int) (screen.getWidth() - frame.getWidth()) / 2,
-                          (int) (screen.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(
+                (int) (screen.getWidth() - frame.getWidth()) / 2,
+                (int) (screen.getHeight() - frame.getHeight()) / 2);
     }
 
     private int dim(int v) {
