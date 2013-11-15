@@ -38,13 +38,12 @@ trait ParticipantRepository extends UsingDatabaseConnection {
         Participants.forInsert returning Participants.id insert (t)
     }
 
-    def insertAll(lt: List[Participant]): Unit = {
+    def insertAll(lt: List[Participant]): List[Int] = {
       database withSession {
         implicit session: Session =>
-          lt.foreach {
-            t =>
-              Participants.insert(t)
-          }
+          for {
+            p <- lt
+          } yield Participants.insert(p)
       }
     }
 

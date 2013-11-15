@@ -26,7 +26,6 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def syncParticipants(participants: List[Participant]): Try[Unit] = {
-    println(participants)
     Try(participants.foreach {
       p =>
         dataAccess.Participants.update(p)
@@ -36,7 +35,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   def scanParticipants: List[Participant] = {
     val participantImageFilter: (File) => Boolean = (f) => {
       f.getName.split('.').drop(1).lastOption match {
-        case Some("png") | Some("jpg") => true
+        case Some("png") | Some("jpg") => !f.getName.contains("bonus")
         case None => false
         case _ => false
       }
@@ -54,15 +53,17 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     participants
   }
 
-  def createParticipants(participants: List[Participant]): Try[Unit] = {
+  def createParticipants(participants: List[Participant]): List[Int] = {
     SimpleLogger.getInstance.info(s"Creating ${participants.size} participants.")
-    Try(dataAccess.Participants.insertAll(participants))
+    dataAccess.Participants.insertAll(participants)
   }
 
   def importParticipants(): Try[Unit] = {
     val participants = scanParticipants
-    if (participants.map(_.name) != getParticipants.map(_.name)) {
-      createParticipants(participants)
+    val persistedParticipants = getParticipants
+    val nameDiff = participants.filter(p => !persistedParticipants.map(_.name).contains(p.name))
+    if (nameDiff.size > 0) {
+      createParticipants(nameDiff)
     }
     Success()
   }
