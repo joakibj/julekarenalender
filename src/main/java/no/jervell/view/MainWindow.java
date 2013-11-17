@@ -113,21 +113,19 @@ public class MainWindow implements WindowListener {
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.isAltDown()) {
+                if(e.isAltDown() && !menuBar.isVisible()) {
                     menuBar.setVisible(true);
+                } else if(e.isAltDown() && menuBar.isVisible()) {
+                    menuBar.setVisible(false);
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if(!e.isAltDown()) {
-                    menuBar.setVisible(false);
-                }
             }
         });
     }
