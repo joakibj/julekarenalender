@@ -20,7 +20,7 @@ trait ParticipantRepository extends UsingDatabaseConnection {
     def forInsert = name ~ image ~ win <>( {
       t => Participant(None, t._1, t._2, t._3)
     }, {
-      (p: Participant) => Some((p.name, p.image, p.win))
+      (p: Participant) => Some((p.name, p.image, p.daysWon))
     })
 
     def find(id: Int): Option[Participant] = database withSession {
@@ -38,13 +38,12 @@ trait ParticipantRepository extends UsingDatabaseConnection {
         Participants.forInsert returning Participants.id insert (t)
     }
 
-    def insertAll(lt: List[Participant]): Unit = {
+    def insertAll(lt: List[Participant]): List[Int] = {
       database withSession {
         implicit session: Session =>
-          lt.foreach {
-            t =>
-              Participants.insert(t)
-          }
+          for {
+            p <- lt
+          } yield Participants.insert(p)
       }
     }
 

@@ -1,8 +1,8 @@
 package no.jervell.view;
 
-import com.github.julekarenalender.ConfigurationModule;
-import com.github.julekarenalender.Main;
+import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.Participant;
+import com.github.julekarenalender.config.AppInfo;
 import no.jervell.jul.GameLogic;
 import no.jervell.util.ImageFactory;
 import no.jervell.view.animation.impl.AnimationLoop;
@@ -17,9 +17,9 @@ import no.jervell.view.swing.WheelView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 public class MainWindow implements WindowListener {
     private static final String FONT_NAME = "Times New Roman";
@@ -39,7 +39,8 @@ public class MainWindow implements WindowListener {
     final static int scale = 125;
     private AnimationLoop loop;
     private JFrame frame;
-    private int[] days;
+    private JMenuBar menuBar;
+    private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
 
@@ -54,7 +55,7 @@ public class MainWindow implements WindowListener {
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
 
-    public MainWindow(int[] days, ConfigurationModule configurationModule) {
+    public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
         this.days = days;
         this.configurationModule = configurationModule;
         buildWindow();
@@ -77,6 +78,8 @@ public class MainWindow implements WindowListener {
         personWheel = createPersonWheel();
         bonusWheel = createBonusWheel();
         frame = createMainFrame();
+        menuBar = createMenuBar();
+        frame.setJMenuBar(menuBar);
         header = createImageView(scale > 100 ? "top2x.jpg" : "top.jpg");
         footer = createImageView(scale > 100 ? "logoer2x.jpg" : "logoer.jpg");
     }
@@ -106,6 +109,27 @@ public class MainWindow implements WindowListener {
 
         personWheelSpinner.setTarget(gameLogic);
         bonusWheelSpinner.setTarget(gameLogic);
+
+        frame.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.isAltDown()) {
+                    menuBar.setVisible(true);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(!e.isAltDown()) {
+                    menuBar.setVisible(false);
+                }
+            }
+        });
     }
 
     private void doLayout() {
@@ -155,9 +179,27 @@ public class MainWindow implements WindowListener {
 
     private JFrame createMainFrame() {
         JFrame frame = new JFrame();
-        frame.setTitle(Main.ProgramName());
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setTitle(AppInfo.title());
         frame.getContentPane().setBackground(FRAME_BACKGROUND);
+
         return frame;
+    }
+
+    private JMenuBar createMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("File");
+
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        file.add(exitMenuItem);
+        menuBar.add(file);
+        menuBar.setVisible(false);
+        return menuBar;
     }
 
     private ImageView createImageView(String file) {
@@ -165,7 +207,7 @@ public class MainWindow implements WindowListener {
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor),
-                                             dim((int) size.getHeight() / imageReductionFactor)));
+                dim((int) size.getHeight() / imageReductionFactor)));
         return image;
     }
 
@@ -204,12 +246,15 @@ public class MainWindow implements WindowListener {
         // Lookup custom images
         no.jervell.view.awt.Image bonus0 = ImageFactory.createImage("bonus0.jpg");
         no.jervell.view.awt.Image bonus1 = ImageFactory.createImage("bonus1.jpg");
+        no.jervell.view.awt.Image bonus2 = ImageFactory.createImage("bonus2.jpg");
 
         java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         rows.add(new WheelView.Row(0,
-                                   bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
+                bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
         rows.add(new WheelView.Row(1,
-                                   bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
+                bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(2,
+                bonus2 != ImageFactory.BLANK ? bonus2 : ImageFactory.createStaticImage("lue.jpg")));
         return rows;
     }
 
@@ -237,7 +282,7 @@ public class MainWindow implements WindowListener {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screen = toolkit.getScreenSize();
         frame.setLocation((int) (screen.getWidth() - frame.getWidth()) / 2,
-                          (int) (screen.getHeight() - frame.getHeight()) / 2);
+                (int) (screen.getHeight() - frame.getHeight()) / 2);
     }
 
     private int dim(int v) {

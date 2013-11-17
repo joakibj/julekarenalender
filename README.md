@@ -11,16 +11,17 @@ Features:
 
 The purpose of this project is to cooperate on writing code, learning Scala and migrate a desktop application from Java to Scala.
 
-All active development takes place in the `develop` branch. Stable releases are merged to `master` and tagged.
+**Please note:** All active development takes place in the `develop` branch, which currently holds the in-development Scala version.
+Stable releases are merged to [`master`](https://github.com/joakibj/julekarenalender/tree/master) and tagged. The development branch for the Java version of Julekarenalender can be found in the [`julekarenalender-java`](https://github.com/joakibj/julekarenalender/tree/julekarenalender-java) branch (This branch is **only** for bugfixes to the Java version).
 
-The last stable release was v1.3 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v1.3).
+The last stable release was v1.3.1 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v1.3.1).
 
 Prerequisites
 -------------
 
 The tools needed to build julekarenalender are:
 
-* Java 6 JRE
+* Java 7 JDK
 * [sbt](http://www.scala-sbt.org/)
 
 `sbt` will fetch itself and the required Scala compiler.
@@ -61,13 +62,15 @@ Roadmap
 
 Goal: Migrate application from Java to Scala and play with new technologies along the way.
 
+Please refer to the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open) on github for a more comprehensive overview.
+
 ######v2.0.0
 
 - [x] Migrated from maven to sbt
-- [/] SQLite as persistent datastore instead of CSV
-- [/] Slick integration with persistent datastore, as the Configuration repository
+- [X] SQLite as persistent datastore instead of CSV
+- [X] Slick integration with persistent datastore, as the Configuration repository
 - [ ] Configuration module UI to set up participants and track winners. TBD, either command-line based, webapp or GUI module.
-- [ ] Supply self-contained jar that has a minimum set of configuration to run
+- [/] Supply self-contained jar that has a minimum set of configuration to run
 - [x] Package jar with dependencies
 - [ ] Features needed for holidays 2013
 
@@ -82,8 +85,8 @@ Pull requests are always welcome. :-)
 
 How you can contribute:
 
-* Implement missing items on the Roadmap
 * Make the project more *idiomatic Scala*
+* Implement items on the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open)
 * Graphics
 * Feature requests
 * Report bugs

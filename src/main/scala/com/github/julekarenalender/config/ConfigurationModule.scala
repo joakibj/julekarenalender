@@ -1,18 +1,19 @@
-package com.github.julekarenalender
+package com.github.julekarenalender.config
 
 import scala.util.Try
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
+import com.github.julekarenalender.Participant
 
 trait ConfigurationModule extends JavaCompatibility {
-  protected val dataAccess = new DataAccessModule(SQLite())
+  protected[this] val dataAccess: DataAccessModule
 
   def getParticipants: List[Participant]
 
   def syncParticipants(participants: List[Participant]): Try[Unit]
 
-  def createParticipants(participants: List[Participant]): Try[Unit]
+  def createParticipants(participants: List[Participant]): List[Int]
 
-  def importParticipantsFromCsv(): Try[Unit]
+  def importParticipants(): Try[Unit]
 
   protected[this] def scanParticipants: List[Participant]
 }

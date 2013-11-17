@@ -1,11 +1,13 @@
 
 name := "julekarenalender"
 
-version := "2.0.0"
+version := "2.0.0-SNAPSHOT"
 
 scalaVersion := "2.10.3"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-encoding", "utf8")
+
+fork in Test := true
 
 resolvers += "sonatype-public" at "https://oss.sonatype.org/content/groups/public"
 
