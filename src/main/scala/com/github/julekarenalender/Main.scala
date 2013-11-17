@@ -1,10 +1,8 @@
 package com.github.julekarenalender
 
-import scala.collection.JavaConversions._
 import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
 import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
-import java.util.Calendar
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false)
 

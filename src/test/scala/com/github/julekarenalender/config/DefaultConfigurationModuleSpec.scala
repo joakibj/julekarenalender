@@ -3,7 +3,6 @@ package com.github.julekarenalender.config
 import org.scalatest._
 import scala.util.Success
 import com.github.julekarenalender.repository.{H2, DataAccessModule}
-import com.github.julekarenalender.config.DefaultConfigurationModule
 import com.github.julekarenalender.Participant
 
 class DefaultConfigurationModuleSpec extends FlatSpec with ShouldMatchers with BeforeAndAfter {
