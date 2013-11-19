@@ -37,12 +37,6 @@ object Main extends App with Logging {
   }
 
   private def runMainWindow(config: Config) {
-    new MainWindow(Parser.toDays(config.days), initConfigurationModule(config)).display()
-  }
-
-  private def initConfigurationModule(config: Config) = {
-    val configModule = new DefaultConfigurationModule
-    if(config.scan) configModule.importParticipants()
-    configModule
+    new MainWindow(Parser.toDays(config.days), new DefaultConfigurationModule(config)).display()
   }
 }
