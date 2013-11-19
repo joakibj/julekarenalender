@@ -62,7 +62,6 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def createParticipants(participants: List[Participant]): List[Int] = {
-    SimpleLogger.getInstance.info(s"Creating ${participants.size} participants.")
     dataAccess.Participants.insertAll(participants)
   }
 
@@ -70,6 +69,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     val participants = scanParticipants
     val persistedParticipants = getParticipants
     val nameDiff = participants.filter(p => !persistedParticipants.map(_.name).contains(p.name))
+    SimpleLogger.getInstance.info(s"Creating ${nameDiff.size} participants.")
     if (nameDiff.size > 0) {
       createParticipants(nameDiff)
     }
