@@ -1,12 +1,13 @@
 package no.jervell.view.animation.impl;
 
-import no.jervell.util.SimpleLogger;
+import com.github.julekarenalender.log.Logger$;
 import no.jervell.view.animation.Animation;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class AnimationLoop extends Thread {
+    private static final Logger$ logger = Logger$.MODULE$;
     private volatile boolean keepRunning;
     private DefaultTimer timer;
     private Animation[] animations;
@@ -34,9 +35,9 @@ public class AnimationLoop extends Thread {
                 moveAnimations();
             }
         } catch (InterruptedException e) {
-            SimpleLogger.getInstance().info("Breaking out of loop. Reason: " + e);
+            logger.info("Breaking out of loop. Reason: " + e);
         }
-        SimpleLogger.getInstance().debug("Loop stopped.");
+        logger.debug("Loop stopped.");
     }
 
     private void initAnimations() {

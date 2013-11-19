@@ -1,5 +1,6 @@
 package no.jervell.util;
 
+import com.github.julekarenalender.log.Logger$;
 import no.jervell.view.awt.Anchor;
 import no.jervell.view.awt.Image;
 
@@ -8,9 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class ImageFactory {
+    private static final Logger$ logger = Logger$.MODULE$;
     private static String localImageFolder = "." + File.separator + "images";
     private static String staticImageResourceFolder = "static/images/";
     private static Color blankColor = Color.white;
@@ -21,7 +22,7 @@ public class ImageFactory {
             URI uri = ImageFactory.class.getClassLoader().getResource(staticImageResourceFolder + name).toURI();
             return loadGenericImage(uri);
         } catch (Exception e) {
-            SimpleLogger.getInstance().error("Could not load image: " + name);
+            logger.error("Could not load image: " + name);
             return BLANK;
         }
     }
