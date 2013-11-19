@@ -48,4 +48,16 @@ class DefaultConfigurationModuleSpec extends FlatSpec with ShouldMatchers with B
     updated(2) should be(Participant(Some(created(2)), "Doffen", "Doffen.jpg", 3))
   }
 
+  it should "reset all configuration" in {
+    val toBeCreated = List(
+      Participant(None, "Arne", "Arne.jpg", 0),
+      Participant(None, "Bjarne", "Bjarne.jpg", 0),
+      Participant(None, "Clara", "Clara.jpg", 0)
+    )
+    val created = configModule.createParticipants(toBeCreated)
+    val result = configModule.reset()
+
+    result should be(Success(()))
+    configModule.getParticipants should have size (0)
+  }
 }
