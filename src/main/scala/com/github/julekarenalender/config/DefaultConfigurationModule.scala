@@ -10,6 +10,7 @@ import com.github.julekarenalender.log.Logging
 class DefaultConfigurationModule(val configuration: Config,
                                  override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule with Logging {
 
+  if(config.reset) reset()
   if(config.scan) importParticipants()
 
   def getParticipants: List[Participant] = {
@@ -80,4 +81,8 @@ class DefaultConfigurationModule(val configuration: Config,
   }
 
   def config: Config = configuration
+
+  def reset(): Try[Unit] = {
+    Try(dataAccess.Participants.deleteAll())
+  }
 }

@@ -4,7 +4,7 @@ import no.jervell.view.MainWindow
 import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
 import com.github.julekarenalender.log.Logging
 
-case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false, bonus: Boolean = false)
+case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false, bonus: Boolean = false, reset: Boolean = false)
 
 object Main extends App with Logging {
   val parser = new scopt.OptionParser[Config]("julekarenalender") {
@@ -25,6 +25,10 @@ object Main extends App with Logging {
       (_, c) =>
         c.copy(debug = true)
     } text("Turns on debug mode")
+    opt[Unit]("reset") optional() action {
+      (_, c) =>
+        c.copy(reset = true)
+    } text("Resets all configuration. Use at own risk!")
     help("help") text ("prints this usage text")
   }
 
