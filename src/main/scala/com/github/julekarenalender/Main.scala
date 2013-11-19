@@ -4,7 +4,7 @@ import no.jervell.view.MainWindow
 import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
 import com.github.julekarenalender.log.Logging
 
-case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false)
+case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false, bonus: Boolean = false)
 
 object Main extends App with Logging {
   val parser = new scopt.OptionParser[Config]("julekarenalender") {
@@ -17,6 +17,10 @@ object Main extends App with Logging {
       (_, c) =>
         c.copy(scan = true)
     } text("Scans the images/ folder for participants")
+    opt[Unit]("bonus") optional() action {
+      (_, c) =>
+        c.copy(bonus = true)
+    } text("Enables the bonus wheel")
     opt[Unit]("debug") optional() action {
       (_, c) =>
         c.copy(debug = true)
