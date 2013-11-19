@@ -1,12 +1,12 @@
 package com.github.julekarenalender
 
-import no.jervell.util.SimpleLogger
 import no.jervell.view.MainWindow
 import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
+import com.github.julekarenalender.log.Logging
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false)
 
-object Main extends App {
+object Main extends App with Logging {
   val parser = new scopt.OptionParser[Config]("julekarenalender") {
     head(AppInfo.ProgramName, AppInfo.Version)
     arg[String]("days") unbounded() optional() action {
@@ -26,11 +26,10 @@ object Main extends App {
 
   parser.parse(args, Config()) map {
     config =>
-      SimpleLogger.getInstance.setDebug(config.debug)
-      SimpleLogger.getInstance.setInfo(true)
+      if(config.debug) logger.enableDebug()
       runMainWindow(config)
   } getOrElse {
-    SimpleLogger.getInstance().error("Unable to parse arguments")
+    logger.error("Unable to parse arguments")
   }
 
   private def runMainWindow(config: Config) {

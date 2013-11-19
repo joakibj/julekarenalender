@@ -1,8 +1,8 @@
 package no.jervell.jul;
 
-import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.Participant;
-import no.jervell.util.SimpleLogger;
+import com.github.julekarenalender.config.ConfigurationModule;
+import com.github.julekarenalender.log.Logger$;
 import no.jervell.view.MainWindow;
 import no.jervell.view.animation.Animation;
 import no.jervell.view.animation.impl.DefaultTimer;
@@ -52,6 +52,7 @@ import java.util.Random;
 public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinner.Target {
     private enum State {INIT, LOOP, WAIT_FOR_PERSON, WINNER, WAIT_FOR_BONUS, FINISHED}
 
+    private static final Logger$ logger = Logger$.MODULE$;
     private ConfigurationModule configurationModule;
     private Script script;
     private State state;
@@ -142,7 +143,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     }
 
     public void spinStarted(WheelView view, double velocity) {
-        SimpleLogger.getInstance().debug("--- spin started");
+        logger.debug("--- spin started");
         switch (state) {
             case WINNER:
                 blink.stop();
@@ -158,7 +159,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     }
 
     public void spinStopped(WheelView view) {
-        SimpleLogger.getInstance().debug("--- spin stopped");
+        logger.debug("--- spin stopped");
         switch (state) {
             case WAIT_FOR_PERSON:
                 blink.start(script.getParticipant());
@@ -179,13 +180,13 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     }
 
     private void setState(State state) {
-        SimpleLogger.getInstance().debug(">>> " + state);
+        logger.debug(">>> " + state);
         if (state == State.FINISHED ||
                 state == State.WINNER) {
             try {
                 configurationModule.syncParticipantsJava(script.getParticipantList());
             } catch (Exception e) {
-                SimpleLogger.getInstance().error("Unable to persist data. Reason: " + e);
+                logger.error("Unable to persist data. Reason: " + e);
             }
         }
         this.state = state;

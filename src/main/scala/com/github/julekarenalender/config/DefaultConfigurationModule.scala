@@ -3,11 +3,11 @@ package com.github.julekarenalender.config
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 import java.io.File
-import no.jervell.util.SimpleLogger
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
 import com.github.julekarenalender.Participant
+import com.github.julekarenalender.log.Logging
 
-class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule {
+class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule with Logging {
 
   def getParticipants: List[Participant] = {
     dataAccess.Participants.findAll()
@@ -34,7 +34,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
   }
 
   def scanParticipants: List[Participant] = {
-    SimpleLogger.getInstance.info("Scanning images/ and importing participants...")
+    logger.info("Scanning images/ and importing participants...")
 
     val participants =
       for {
@@ -56,7 +56,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     Try(new File(".", "images").listFiles().toList.filter(participantImageFilter)) match {
       case Success(li) => li
       case Failure(ex) =>
-        SimpleLogger.getInstance().error("Unable to find the folder ./images")
+        logger.error("Unable to find the folder ./images")
         Nil
     }
   }
@@ -69,7 +69,7 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     val participants = scanParticipants
     val persistedParticipants = getParticipants
     val nameDiff = participants.filter(p => !persistedParticipants.map(_.name).contains(p.name))
-    SimpleLogger.getInstance.info(s"Creating ${nameDiff.size} participants.")
+    logger.info(s"Creating ${nameDiff.size} participants.")
     if (nameDiff.size > 0) {
       createParticipants(nameDiff)
     }

@@ -1,9 +1,9 @@
 package no.jervell.view.swing;
 
+import com.github.julekarenalender.log.Logger$;
 import no.jervell.view.animation.impl.FrameCounter;
 import no.jervell.view.awt.Paintable;
 import no.jervell.view.gfx.ImageFilter;
-import no.jervell.util.SimpleLogger;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -13,6 +13,9 @@ import java.awt.image.*;
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class WheelView extends Component {
+
+    private static final Logger$ logger = Logger$.MODULE$;
+
     // Model data
     private java.util.List<Row> rows;
 
@@ -143,7 +146,7 @@ public class WheelView extends Component {
         g.drawImage(memImg, 0, 0, null);
 
         if (frameCounter != null && frameCounter.frame()) {
-            SimpleLogger.getInstance().debug("" + frameCounter);
+            logger.debug("" + frameCounter);
         }
     }
 
@@ -153,13 +156,13 @@ public class WheelView extends Component {
             grabber.grabPixels();
         } catch (InterruptedException e) {
             // Ouch, we were interrupted while grabbing. Oh well, not much we can do about that...
-            SimpleLogger.getInstance().info("Interrupted while grabbing pixels: " + e);
+            logger.info("Interrupted while grabbing pixels: " + e);
         }
 
         // Pixel are grabbed now, but make sure there were no problems
         if ((grabber.getStatus() & ImageObserver.ABORT) != 0) {
             // Doh, it seems the grabbing of the pixels was aborted...
-            SimpleLogger.getInstance().info("Pixel grabbing aborted.");
+            logger.info("Pixel grabbing aborted.");
         }
     }
 
