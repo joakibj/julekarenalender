@@ -31,6 +31,10 @@ public class ImageFactory {
         return loadGenericImage(new File(localImageFolder, name).toURI());
     }
 
+    public static Image createImage(File file) {
+        return loadGenericImage(file.toURI());
+    }
+
     private static Image loadGenericImage(URI uri) {
         try {
             Image image = new Image(uri);

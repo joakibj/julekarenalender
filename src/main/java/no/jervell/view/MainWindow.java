@@ -1,8 +1,9 @@
 package no.jervell.view;
 
-import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.Participant;
 import com.github.julekarenalender.config.AppInfo;
+import com.github.julekarenalender.config.ConfigurationModule;
+import com.github.julekarenalender.log.Logger$;
 import no.jervell.jul.GameLogic;
 import no.jervell.util.ImageFactory;
 import no.jervell.view.animation.impl.AnimationLoop;
@@ -18,7 +19,8 @@ import no.jervell.view.swing.WheelView;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainWindow implements WindowListener {
@@ -30,6 +32,8 @@ public class MainWindow implements WindowListener {
     private static final Color FRAME_BACKGROUND = Color.black;
     private static final Paint BACKGROUND_COLOUR = Color.white;
     private static final Color TEXT_COLOUR = Color.black;
+
+    private static final Logger$ logger = Logger$.MODULE$;
 
     /**
      * User interface size scaler, 100=native, 200=double size, 50=half size,
@@ -95,7 +99,7 @@ public class MainWindow implements WindowListener {
         gameLogic = new GameLogic(days, configurationModule, this);
 
         loop = new AnimationLoop();
-        if(isBonusEnabled()) {
+        if (isBonusEnabled()) {
             loop.setAnimations(personWheelAnimation, bonusWheelAnimation, gameLogic);
         } else {
             loop.setAnimations(personWheelAnimation, gameLogic);
@@ -169,14 +173,14 @@ public class MainWindow implements WindowListener {
 
     private WheelView createDateWheel() {
         WheelView date = createWheelView();
-        java.util.List<WheelView.Row> rows = createDateWheelRowList();
+        List<WheelView.Row> rows = createDateWheelRowList();
         date.setRows(rows);
         return date;
     }
 
     private WheelView createPersonWheel() {
         WheelView wheelView = createWheelView();
-        java.util.List<WheelView.Row> rows = createPersonWheelRowList();
+        List<WheelView.Row> rows = createPersonWheelRowList();
         wheelView.setRows(rows);
         wheelView.setFrameCounter(new FrameCounter("Person"));
         return wheelView;
@@ -184,7 +188,13 @@ public class MainWindow implements WindowListener {
 
     private WheelView createBonusWheel() {
         WheelView wheelView = createWheelView();
-        java.util.List<WheelView.Row> rows = createBonusWheelRowList();
+        List<WheelView.Row> rows;
+        if(getBonusFiles().size() > 0) {
+            rows = createCustomBonusWheel();
+        } else {
+            rows = createDefaultBonusWheel();
+        }
+
         wheelView.setRows(rows);
         return wheelView;
     }
@@ -230,16 +240,16 @@ public class MainWindow implements WindowListener {
         return date;
     }
 
-    private java.util.List<WheelView.Row> createDateWheelRowList() {
-        java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
+    private List<WheelView.Row> createDateWheelRowList() {
+        List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         for (int i = 1; i <= 24; ++i) {
             rows.add(new WheelView.Row(i, createDateLabel(i)));
         }
         return rows;
     }
 
-    private java.util.List<WheelView.Row> createPersonWheelRowList() {
-        java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
+    private List<WheelView.Row> createPersonWheelRowList() {
+        List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         no.jervell.view.awt.Image first = ImageFactory.createStaticImage("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
@@ -254,20 +264,38 @@ public class MainWindow implements WindowListener {
         return new ImageLabel(img, lbl);
     }
 
-    private java.util.List<WheelView.Row> createBonusWheelRowList() {
-        // Lookup custom images
-        no.jervell.view.awt.Image bonus0 = ImageFactory.createImage("bonus0.jpg");
-        no.jervell.view.awt.Image bonus1 = ImageFactory.createImage("bonus1.jpg");
-        no.jervell.view.awt.Image bonus2 = ImageFactory.createImage("bonus2.jpg");
-
-        java.util.List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0,
-                bonus0 != ImageFactory.BLANK ? bonus0 : ImageFactory.createStaticImage("lue.jpg")));
-        rows.add(new WheelView.Row(1,
-                bonus1 != ImageFactory.BLANK ? bonus1 : ImageFactory.createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(2,
-                bonus2 != ImageFactory.BLANK ? bonus2 : ImageFactory.createStaticImage("lue.jpg")));
+    private List<WheelView.Row> createDefaultBonusWheel() {
+        List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
+        rows.add(new WheelView.Row(0, ImageFactory.createStaticImage("lue.jpg")));
+        rows.add(new WheelView.Row(1, ImageFactory.createStaticImage("pakke.jpg")));
+        rows.add(new WheelView.Row(2, ImageFactory.createStaticImage("lue.jpg")));
         return rows;
+    }
+
+    private List<WheelView.Row> createCustomBonusWheel() {
+        List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
+        int bonusIndex = 0;
+        for(File bonusFile : getBonusFiles()) {
+            rows.add(new WheelView.Row(bonusIndex, ImageFactory.createImage(bonusFile)));
+            bonusIndex++;
+        }
+        return rows;
+    }
+
+    private List<File> getBonusFiles() {
+        List<File> bonusImages = new ArrayList<File>();
+        try {
+            File[] imageFiles = new File(".", "images").listFiles();
+            for (int i = 0; i < imageFiles.length; i++) {
+                if (imageFiles[i].getName().contains("bonus")) {
+                    bonusImages.add(imageFiles[i]);
+                }
+            }
+            return bonusImages;
+        } catch (Exception ex) {
+            logger.error("Unable to open ./images folder: " + ex.getMessage());
+            return bonusImages;
+        }
     }
 
     private no.jervell.view.awt.Label createDateLabel(int date) {
