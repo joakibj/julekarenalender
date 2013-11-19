@@ -17,6 +17,8 @@ trait ConfigurationModule extends JavaCompatibility {
 
   def importParticipants(): Try[Unit]
 
+  def reset(): Try[Unit]
+
   protected[this] def scanParticipants: List[Participant]
 }
 
