@@ -85,7 +85,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     public void init(DefaultTimer timer) {
         date.setEnabled(false);
         person.setEnabled(false);
-        bonus.setEnabled(false);
+        if (isBonusEnabled()) bonus.setEnabled(false);
         if (script.hasCurrent()) {
             date.setYOffset(script.getDay());
         }
@@ -134,7 +134,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             case WINNER:
                 if (view == person) {
                     return script.replaceParticipant();
-                } else if (view == bonus) {
+                } else if (view == bonus && isBonusEnabled()) {
                     return script.randomBonusIndex();
                 }
                 break;
@@ -148,9 +148,9 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             case WINNER:
                 blink.stop();
                 if (view == person) {
-                    bonus.setEnabled(false);
+                    if (isBonusEnabled()) bonus.setEnabled(false);
                     setState(State.WAIT_FOR_PERSON);
-                } else if (view == bonus) {
+                } else if (view == bonus && isBonusEnabled()) {
                     person.setEnabled(false);
                     setState(State.WAIT_FOR_BONUS);
                 }
@@ -164,18 +164,30 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             case WAIT_FOR_PERSON:
                 blink.start(script.getParticipant());
                 person.setEnabled(false);
-                bonus.setEnabled(true);
+                if (isBonusEnabled()) {
+                    bonus.setEnabled(true);
+                } else {
+                    person.setEnabled(true);
+                }
                 setState(State.WINNER);
+                if(!isBonusEnabled()) rotateToNext();
                 break;
 
             case WAIT_FOR_BONUS:
-                bonus.setEnabled(false);
-                if (script.move()) {
-                    setState(State.LOOP);
-                } else {
-                    setState(State.FINISHED);
+                if (isBonusEnabled()) {
+                    bonus.setEnabled(false);
+                    rotateToNext();
                 }
                 break;
+        }
+    }
+
+    private void rotateToNext() {
+        if (script.move()) {
+            setState(State.LOOP);
+        } else {
+            setState(State.FINISHED);
+            person.setEnabled(false);
         }
     }
 
@@ -190,6 +202,10 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             }
         }
         this.state = state;
+    }
+
+    private boolean isBonusEnabled() {
+        return configurationModule.config().bonus();
     }
 
     private class Script {
@@ -307,5 +323,4 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             return hasCurrent();
         }
     }
-
 }

@@ -3,10 +3,10 @@ package com.github.julekarenalender.config
 import org.scalatest._
 import scala.util.Success
 import com.github.julekarenalender.repository.{H2, DataAccessModule}
-import com.github.julekarenalender.Participant
+import com.github.julekarenalender.{Config, Participant}
 
 class DefaultConfigurationModuleSpec extends FlatSpec with ShouldMatchers with BeforeAndAfter {
-  var configModule = new DefaultConfigurationModule(new DataAccessModule(H2()))
+  var configModule = new DefaultConfigurationModule(new Config, new DataAccessModule(H2()))
 
   before {
     configModule.dataAccess.Participants.deleteAll()

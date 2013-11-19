@@ -76,7 +76,7 @@ public class MainWindow implements WindowListener {
     private void setupGUI() {
         dateWheel = createDateWheel();
         personWheel = createPersonWheel();
-        bonusWheel = createBonusWheel();
+        if (isBonusEnabled()) bonusWheel = createBonusWheel();
         frame = createMainFrame();
         menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
@@ -86,29 +86,25 @@ public class MainWindow implements WindowListener {
 
     private void setupLogic() {
         personWheelAnimation = new WheelAnimation(personWheel, MAX_VELOCITY);
-        bonusWheelAnimation = new WheelAnimation(bonusWheel, MAX_VELOCITY);
-        loop = new AnimationLoop();
         personWheelSpinner = new WheelSpinner(personWheelAnimation, MAX_VELOCITY);
-        bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, MAX_VELOCITY);
+        if (isBonusEnabled()) {
+            bonusWheelAnimation = new WheelAnimation(bonusWheel, MAX_VELOCITY);
+            bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, MAX_VELOCITY);
+        }
+
         gameLogic = new GameLogic(days, configurationModule, this);
 
-        loop.setAnimations(personWheelAnimation, bonusWheelAnimation, gameLogic);
+        loop = new AnimationLoop();
+        if(isBonusEnabled()) {
+            loop.setAnimations(personWheelAnimation, bonusWheelAnimation, gameLogic);
+        } else {
+            loop.setAnimations(personWheelAnimation, gameLogic);
+        }
+
     }
 
     private void attachListeners() {
         frame.addWindowListener(this);
-
-        personWheel.addMouseListener(personWheelSpinner);
-        personWheel.addMouseMotionListener(personWheelSpinner);
-
-        bonusWheel.addMouseListener(bonusWheelSpinner);
-        bonusWheel.addMouseMotionListener(bonusWheelSpinner);
-
-        personWheelAnimation.addListener(gameLogic);
-        bonusWheelAnimation.addListener(gameLogic);
-
-        personWheelSpinner.setTarget(gameLogic);
-        bonusWheelSpinner.setTarget(gameLogic);
 
         frame.addKeyListener(new KeyListener() {
             @Override
@@ -117,9 +113,9 @@ public class MainWindow implements WindowListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.isAltDown() && !menuBar.isVisible()) {
+                if (e.isAltDown() && !menuBar.isVisible()) {
                     menuBar.setVisible(true);
-                } else if(e.isAltDown() && menuBar.isVisible()) {
+                } else if (e.isAltDown() && menuBar.isVisible()) {
                     menuBar.setVisible(false);
                 }
             }
@@ -128,12 +124,28 @@ public class MainWindow implements WindowListener {
             public void keyReleased(KeyEvent e) {
             }
         });
+
+        personWheel.addMouseListener(personWheelSpinner);
+        personWheel.addMouseMotionListener(personWheelSpinner);
+        personWheelAnimation.addListener(gameLogic);
+        personWheelSpinner.setTarget(gameLogic);
+
+        if (isBonusEnabled()) {
+            bonusWheel.addMouseListener(bonusWheelSpinner);
+            bonusWheel.addMouseMotionListener(bonusWheelSpinner);
+            bonusWheelAnimation.addListener(gameLogic);
+            bonusWheelSpinner.setTarget(gameLogic);
+        }
     }
 
     private void doLayout() {
         dateWheel.setPreferredSize(new Dimension(dim(180), dim(235)));
-        personWheel.setPreferredSize(new Dimension(dim(550), dim(235)));
-        bonusWheel.setPreferredSize(new Dimension(dim(180), dim(235)));
+        if (isBonusEnabled()) {
+            personWheel.setPreferredSize(new Dimension(dim(550), dim(235)));
+            bonusWheel.setPreferredSize(new Dimension(dim(180), dim(235)));
+        } else {
+            personWheel.setPreferredSize(new Dimension(dim(550 + 180), dim(235)));
+        }
 
         Container c = new Container();
         FlowLayout flowLayout = new FlowLayout();
@@ -141,7 +153,9 @@ public class MainWindow implements WindowListener {
         c.setLayout(flowLayout);
         c.add(dateWheel);
         c.add(personWheel);
-        c.add(bonusWheel);
+        if (isBonusEnabled()) {
+            c.add(bonusWheel);
+        }
 
         frame.setLayout(new BorderLayout(10, 10));
         frame.add(c, BorderLayout.CENTER);
@@ -285,6 +299,10 @@ public class MainWindow implements WindowListener {
 
     private int dim(int v) {
         return (v * scale) / 100;
+    }
+
+    private boolean isBonusEnabled() {
+        return configurationModule.config().bonus();
     }
 
     @Override

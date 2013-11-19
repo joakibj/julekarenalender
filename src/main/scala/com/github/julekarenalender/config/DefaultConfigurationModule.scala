@@ -4,10 +4,13 @@ import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 import java.io.File
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
-import com.github.julekarenalender.Participant
+import com.github.julekarenalender.{Config, Participant}
 import com.github.julekarenalender.log.Logging
 
-class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule with Logging {
+class DefaultConfigurationModule(val configuration: Config,
+                                 override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule with Logging {
+
+  if(config.scan) importParticipants()
 
   def getParticipants: List[Participant] = {
     dataAccess.Participants.findAll()
@@ -75,4 +78,6 @@ class DefaultConfigurationModule(override val dataAccess: DataAccessModule = new
     }
     Success()
   }
+
+  def config: Config = configuration
 }

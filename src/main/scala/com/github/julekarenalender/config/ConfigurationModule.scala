@@ -2,10 +2,12 @@ package com.github.julekarenalender.config
 
 import scala.util.Try
 import com.github.julekarenalender.repository.{SQLite, DataAccessModule}
-import com.github.julekarenalender.Participant
+import com.github.julekarenalender.{Config, Participant}
 
 trait ConfigurationModule extends JavaCompatibility {
   protected[this] val dataAccess: DataAccessModule
+
+  def config: Config
 
   def getParticipants: List[Participant]
 
