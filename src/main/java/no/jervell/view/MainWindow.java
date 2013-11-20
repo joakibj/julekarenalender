@@ -4,8 +4,8 @@ import com.github.julekarenalender.Participant;
 import com.github.julekarenalender.config.AppInfo;
 import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.log.Logger$;
+import com.github.julekarenalender.view.util.Images;
 import no.jervell.jul.GameLogic;
-import no.jervell.util.ImageFactory;
 import no.jervell.view.animation.impl.AnimationLoop;
 import no.jervell.view.animation.impl.FrameCounter;
 import no.jervell.view.animation.impl.WheelAnimation;
@@ -225,7 +225,7 @@ public class MainWindow implements WindowListener {
     }
 
     private ImageView createImageView(String file) {
-        ImageView image = new ImageView(ImageFactory.createStaticImage(file));
+        ImageView image = new ImageView(Images.apply().staticImg(file));
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor),
@@ -250,7 +250,7 @@ public class MainWindow implements WindowListener {
 
     private List<WheelView.Row> createPersonWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        no.jervell.view.awt.Image first = ImageFactory.createStaticImage("spinnmeg.jpg");
+        no.jervell.view.awt.Image first = Images.apply().staticImg("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
         // Adding of people is handled in the gameLogic
@@ -258,7 +258,7 @@ public class MainWindow implements WindowListener {
     }
 
     public ImageLabel createPersonWheelRow(Participant p) {
-        no.jervell.view.awt.Image img = ImageFactory.createImage(p.image());
+        no.jervell.view.awt.Image img = Images.apply().localImg(p.image());
         no.jervell.view.awt.Label lbl = createPersonLabel(p.name());
         lbl.setAnchor(Anchor.LEFT_CENTER);
         return new ImageLabel(img, lbl);
@@ -266,9 +266,9 @@ public class MainWindow implements WindowListener {
 
     private List<WheelView.Row> createDefaultBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, ImageFactory.createStaticImage("lue.jpg")));
-        rows.add(new WheelView.Row(1, ImageFactory.createStaticImage("pakke.jpg")));
-        rows.add(new WheelView.Row(2, ImageFactory.createStaticImage("lue.jpg")));
+        rows.add(new WheelView.Row(0, Images.apply().staticImg("lue.jpg")));
+        rows.add(new WheelView.Row(1, Images.apply().staticImg("pakke.jpg")));
+        rows.add(new WheelView.Row(2, Images.apply().staticImg("lue.jpg")));
         return rows;
     }
 
@@ -276,7 +276,7 @@ public class MainWindow implements WindowListener {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
         for(File bonusFile : getBonusFiles()) {
-            rows.add(new WheelView.Row(bonusIndex, ImageFactory.createImage(bonusFile)));
+            rows.add(new WheelView.Row(bonusIndex, Images.apply().image(bonusFile)));
             bonusIndex++;
         }
         return rows;
