@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MainWindow implements WindowListener {
@@ -189,7 +190,7 @@ public class MainWindow implements WindowListener {
     private WheelView createBonusWheel() {
         WheelView wheelView = createWheelView();
         List<WheelView.Row> rows;
-        if(getBonusFiles().size() > 0) {
+        if (getBonusFiles().size() > 0) {
             rows = createCustomBonusWheel();
         } else {
             rows = createDefaultBonusWheel();
@@ -211,7 +212,6 @@ public class MainWindow implements WindowListener {
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
-
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -219,9 +219,48 @@ public class MainWindow implements WindowListener {
             }
         });
         file.add(exitMenuItem);
+
+        JMenu participants = new JMenu("Participants");
+        JMenuItem listParticipants = new JMenuItem("View/Edit");
+        listParticipants.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createViewEditParticipantDialog();
+            }
+        });
+
+        participants.add(listParticipants);
+
         menuBar.add(file);
+        menuBar.add(participants);
         menuBar.setVisible(false);
         return menuBar;
+    }
+
+    private JPanel participantPane() {
+        JPanel pane = new JPanel();
+        Collection<Participant> participants = configurationModule.getParticipantsJava();
+        GridLayout layout = new GridLayout(participants.size(), 3);
+        layout.setHgap(10);
+        layout.setVgap(2);
+        pane.setLayout(layout);
+        int row = 0;
+        for (Participant p : participants) {
+            pane.add(new JLabel(String.valueOf(p.id())), row, 0);
+            pane.add(new JLabel(p.name()), row, 1);
+            pane.add(new JTextField(String.valueOf(p.daysWon())), row, 2);
+            row++;
+        }
+        return pane;
+    }
+
+    private void createViewEditParticipantDialog() {
+        JDialog jd = new JDialog(SwingUtilities.windowForComponent(frame), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
+        jd.setTitle("View/Edit Participants");
+        jd.setLocationRelativeTo(frame);
+        jd.add(participantPane());
+        jd.pack();
+        jd.setVisible(true);
     }
 
     private ImageView createImageView(String file) {
@@ -275,7 +314,7 @@ public class MainWindow implements WindowListener {
     private List<WheelView.Row> createCustomBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
-        for(File bonusFile : getBonusFiles()) {
+        for (File bonusFile : getBonusFiles()) {
             rows.add(new WheelView.Row(bonusIndex, Images.apply().image(bonusFile)));
             bonusIndex++;
         }
