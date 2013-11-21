@@ -79,7 +79,7 @@ Usage
 
 ![julekarenalender-default](http://joakibj.github.io/julekarenalender/images/julekarenalender-default.PNG)
 
-On the left side is a wheel representing each day in december until christmas eve [0..24]. On the right side is a wheel with each participant.
+On the left side is a wheel representing each day in december until christmas eve [1..24]. On the right side is a wheel with each participant.
 Simply grab the participant wheel, swipe it down vertically and release to make it spin. The participant wheel will eventually stop and the text will blink red on the winner.
 
 If one wants to draw more than one winner per day, this is configured via the command line. For example, assume day 2 is a monday, starting the application with:
