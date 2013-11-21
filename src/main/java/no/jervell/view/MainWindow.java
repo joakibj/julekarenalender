@@ -103,8 +103,8 @@ public class MainWindow implements WindowListener {
         frame = createMainFrame();
         menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
-        header = createImageView(scale > 100 ? "top2x.jpg" : "top.jpg");
-        footer = createImageView(scale > 100 ? "logoer2x.jpg" : "logoer.jpg");
+        header = createImageView(scale > 100 ? "headerx2.jpg" : "header.jpg");
+        footer = createImageView(scale > 100 ? "footerx2.jpg" : "footer.jpg");
     }
 
     private void setupLogic() {
