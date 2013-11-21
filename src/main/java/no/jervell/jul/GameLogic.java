@@ -75,6 +75,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
     }
 
     public void redrawLast() {
+        if(isBonusEnabled()) bonus.setEnabled(false);
         script.resetLastWinner();
         setState(State.LOOP);
     }
@@ -110,6 +111,9 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
                 break;
 
             case WINNER:
+                blink.move(timer);
+                break;
+            case FINISHED:
                 blink.move(timer);
                 break;
         }
@@ -192,6 +196,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             setState(State.LOOP);
         } else {
             setState(State.FINISHED);
+            blink.start(script.getLastWinner());
             person.setEnabled(false);
         }
     }
@@ -309,6 +314,10 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
         public int getDay() {
             return date.getIndex(winners[pos].daysWon());
+        }
+
+        public int getLastWinner() {
+            return person.getIndex(lastWinner);
         }
 
         public int getParticipant() {
