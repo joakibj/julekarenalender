@@ -136,12 +136,12 @@ Usage: julekarenalender [options] [days]
         List of days there should be a draw. Optional
   --scan
         Scans the images/ folder for participants. No GUI is launched
+  --reset
+        Resets all configuration. Use at own risk! No GUI is launched
   --bonus
         Enables the bonus wheel
   --debug
         Turns on debug mode
-  --reset
-        Resets all configuration. Use at own risk! No GUI is launched
   --help
         prints this usage text
 ```

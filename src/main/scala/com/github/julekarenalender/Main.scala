@@ -17,6 +17,10 @@ object Main extends App with Logging {
       (_, c) =>
         c.copy(scan = true)
     } text("Scans the images/ folder for participants. No GUI is launched")
+    opt[Unit]("reset") optional() action {
+      (_, c) =>
+        c.copy(reset = true)
+    } text("Resets all configuration. Use at own risk! No GUI is launched")
     opt[Unit]("bonus") optional() action {
       (_, c) =>
         c.copy(bonus = true)
@@ -25,10 +29,6 @@ object Main extends App with Logging {
       (_, c) =>
         c.copy(debug = true)
     } text("Turns on debug mode")
-    opt[Unit]("reset") optional() action {
-      (_, c) =>
-        c.copy(reset = true)
-    } text("Resets all configuration. Use at own risk! No GUI is launched")
     help("help") text ("prints this usage text")
   }
 
