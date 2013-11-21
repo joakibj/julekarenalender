@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 
-public class MainWindow implements WindowListener {
+public class MainWindow extends JFrame {
     private static final String FONT_NAME = "Times New Roman";
     private static final int FONT_SIZE = 50;
     private static final Font PLAIN_FONT = new Font(FONT_NAME, Font.PLAIN, FONT_SIZE);
@@ -43,7 +43,6 @@ public class MainWindow implements WindowListener {
     //TODO: Make enum?
     final static int scale = 125;
     private AnimationLoop loop;
-    private JFrame frame;
     private JMenuBar menuBar;
     private JDialog showParticipants;
     private Map<Integer, JTextField> participantTextFields;
@@ -51,10 +50,10 @@ public class MainWindow implements WindowListener {
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
 
-    //TODO: Split up further into a seperate class encapsulating Wheel functionality
-    public WheelView dateWheel;
-    public WheelView personWheel;
-    public WheelView bonusWheel;
+    private WheelView dateWheel;
+    private WheelView personWheel;
+    private WheelView bonusWheel;
+
     private ImageView header;
     private ImageView footer;
     private WheelSpinner personWheelSpinner;
@@ -66,28 +65,35 @@ public class MainWindow implements WindowListener {
         this.days = days;
         this.configurationModule = configurationModule;
         this.participantTextFields = new HashMap<Integer, JTextField>();
+
         buildWindow();
     }
 
     private void buildWindow() {
+        setupFrame();
         setupGUI();
         setupLogic();
         attachListeners();
-        doLayout();
+        setupLayout();
     }
 
     public void display() {
-        frame.setVisible(true);
+        setVisible(true);
         loop.start();
+    }
+
+    private void setupFrame() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setTitle(AppInfo.title());
+        getContentPane().setBackground(FRAME_BACKGROUND);
     }
 
     private void setupGUI() {
         dateWheel = createDateWheel();
         personWheel = createPersonWheel();
         if (isBonusEnabled()) bonusWheel = createBonusWheel();
-        frame = createMainFrame();
         menuBar = createMenuBar();
-        frame.setJMenuBar(menuBar);
+        setJMenuBar(menuBar);
         header = createImageView(scale > 100 ? "headerx2.jpg" : "header.jpg");
         footer = createImageView(scale > 100 ? "footerx2.jpg" : "footer.jpg");
     }
@@ -112,9 +118,15 @@ public class MainWindow implements WindowListener {
     }
 
     private void attachListeners() {
-        frame.addWindowListener(this);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                loop.end();
+                dispose();
+            }
+        });
 
-        frame.addKeyListener(new KeyListener() {
+        addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
@@ -146,7 +158,7 @@ public class MainWindow implements WindowListener {
         }
     }
 
-    private void doLayout() {
+    private void setupLayout() {
         dateWheel.setPreferredSize(new Dimension(dim(180), dim(235)));
         if (isBonusEnabled()) {
             personWheel.setPreferredSize(new Dimension(dim(550), dim(235)));
@@ -165,14 +177,14 @@ public class MainWindow implements WindowListener {
             wheels.add(bonusWheel);
         }
 
-        frame.setLayout(new BorderLayout(10, 10));
-        frame.add(wheels, BorderLayout.CENTER);
-        frame.add(header, BorderLayout.NORTH);
-        frame.add(footer, BorderLayout.SOUTH);
+        setLayout(new BorderLayout(10, 10));
+        add(wheels, BorderLayout.CENTER);
+        add(header, BorderLayout.NORTH);
+        add(footer, BorderLayout.SOUTH);
 
-        frame.pack();
-        frame.setSize(frame.getWidth(), frame.getHeight() + dim(50));
-        center(frame);
+        pack();
+        setSize(getWidth(), getHeight() + dim(50));
+        center();
     }
 
     private WheelView createDateWheel() {
@@ -201,15 +213,6 @@ public class MainWindow implements WindowListener {
 
         wheelView.setRows(rows);
         return wheelView;
-    }
-
-    private JFrame createMainFrame() {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setTitle(AppInfo.title());
-        frame.getContentPane().setBackground(FRAME_BACKGROUND);
-
-        return frame;
     }
 
     private JMenuBar createMenuBar() {
@@ -253,8 +256,8 @@ public class MainWindow implements WindowListener {
     }
 
     private JDialog createShowParticipantsDialog() {
-        JDialog jd = new JDialog(SwingUtilities.windowForComponent(frame), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
-        jd.setLocationRelativeTo(frame);
+        JDialog jd = new JDialog(SwingUtilities.windowForComponent(this), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
+        jd.setLocationRelativeTo(this);
         jd.setLayout(new BorderLayout(10, 10));
         jd.add(participantPane(), BorderLayout.NORTH);
         jd.add(participantSaveClosePane(), BorderLayout.SOUTH);
@@ -419,11 +422,11 @@ public class MainWindow implements WindowListener {
         return label;
     }
 
-    private void center(JFrame frame) {
+    private void center() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screen = toolkit.getScreenSize();
-        frame.setLocation((int) (screen.getWidth() - frame.getWidth()) / 2,
-                (int) (screen.getHeight() - frame.getHeight()) / 2);
+        setLocation((int) (screen.getWidth() - getWidth()) / 2,
+                (int) (screen.getHeight() - getHeight()) / 2);
     }
 
     private int dim(int v) {
@@ -434,39 +437,16 @@ public class MainWindow implements WindowListener {
         return configurationModule.config().bonus();
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {
 
+    public WheelView getDateWheel() {
+        return dateWheel;
     }
 
-    @Override
-    public void windowClosing(WindowEvent e) {
-        loop.end();
-        frame.dispose();
+    public WheelView getPersonWheel() {
+        return personWheel;
     }
 
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
+    public WheelView getBonusWheel() {
+        return bonusWheel;
     }
 }

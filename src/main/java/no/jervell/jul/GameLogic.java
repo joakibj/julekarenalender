@@ -65,9 +65,9 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
     public GameLogic(List<Integer> days, ConfigurationModule configurationModule, MainWindow mainWindow) {
         this.configurationModule = configurationModule;
-        this.date = mainWindow.dateWheel;
-        this.person = mainWindow.personWheel;
-        this.bonus = mainWindow.bonusWheel;
+        this.date = mainWindow.getDateWheel();
+        this.person = mainWindow.getPersonWheel();
+        this.bonus = mainWindow.getBonusWheel();
         this.blink = new WheelRowAnimator(person);
         this.script = new Script(days);
         populatePerson(mainWindow);
