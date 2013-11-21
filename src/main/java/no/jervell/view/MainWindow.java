@@ -241,6 +241,7 @@ public class MainWindow implements WindowListener {
 
         JMenu participants = new JMenu("Participants");
         JMenuItem listParticipants = new JMenuItem("View/Edit");
+        listParticipants.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
         listParticipants.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,7 +250,7 @@ public class MainWindow implements WindowListener {
             }
         });
         JMenuItem redrawParticipant = new JMenuItem("Redraw");
-        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
+        redrawParticipant.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
         redrawParticipant.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
