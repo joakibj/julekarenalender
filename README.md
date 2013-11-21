@@ -151,12 +151,12 @@ Please refer to the [issue list](https://github.com/joakibj/julekarenalender/iss
 
 ######v2.0.0 (holiday 2013)
 
-- [x] Migrated from maven to sbt
+- [X] Migrated from maven to sbt
 - [X] SQLite as persistent datastore instead of CSV
 - [X] Slick integration with persistent datastore, as the Configuration repository
 - [X] Configuration module UI to set up participants and track winners. GUI panel
-- [/] Supply self-contained jar that has a minimum set of configuration to run
-- [x] Package jar with dependencies
+- [X] Supply self-contained jar that has a minimum set of configuration to run
+- [X] Package jar with dependencies
 - [/] Features needed for holidays 2013
 
 ######v2.1.0 (holiday 2014)
