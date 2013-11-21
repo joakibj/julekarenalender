@@ -228,6 +228,7 @@ public class MainWindow implements WindowListener {
         final JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 System.exit(0);
