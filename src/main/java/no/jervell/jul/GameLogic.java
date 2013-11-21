@@ -311,10 +311,6 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             return date.getIndex(winners[pos].daysWon());
         }
 
-        public int getNextDay() {
-            return date.getIndex(winners[pos + 1].daysWon());
-        }
-
         public int getParticipant() {
             return person.getIndex(winners[pos]);
         }
@@ -332,10 +328,6 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
         public boolean hasCurrent() {
             return pos < days.size();
-        }
-
-        public boolean hasNext() {
-            return pos + 1 < days.size();
         }
 
         public boolean move() {
