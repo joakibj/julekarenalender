@@ -133,9 +133,9 @@ public class MainWindow implements WindowListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.isAltDown() && !menuBar.isVisible()) {
+                if (e.getKeyCode() == KeyEvent.VK_ALT && !menuBar.isVisible()) {
                     menuBar.setVisible(true);
-                } else if (e.isAltDown() && menuBar.isVisible()) {
+                } else if (e.getKeyCode() == KeyEvent.VK_ALT && menuBar.isVisible()) {
                     menuBar.setVisible(false);
                 }
             }
