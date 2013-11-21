@@ -16,7 +16,7 @@ object Main extends App with Logging {
     opt[Unit]("scan") optional() action {
       (_, c) =>
         c.copy(scan = true)
-    } text("Scans the images/ folder for participants")
+    } text("Scans the images/ folder for participants. No GUI is launched")
     opt[Unit]("bonus") optional() action {
       (_, c) =>
         c.copy(bonus = true)
@@ -28,16 +28,32 @@ object Main extends App with Logging {
     opt[Unit]("reset") optional() action {
       (_, c) =>
         c.copy(reset = true)
-    } text("Resets all configuration. Use at own risk!")
+    } text("Resets all configuration. Use at own risk! No GUI is launched")
     help("help") text ("prints this usage text")
   }
 
   parser.parse(args, Config()) map {
     config =>
       if(config.debug) logger.enableDebug()
+      if(config.reset) reset(config)
+      if(config.scan) scan(config)
       runMainWindow(config)
   } getOrElse {
     logger.error("Unable to parse arguments")
+  }
+
+  private def scan(config: Config) {
+    val configModule = new DefaultConfigurationModule(config)
+    logger.info("Scanning images/ and importing participants...")
+    configModule.importParticipants()
+    sys.exit(0)
+  }
+
+  private def reset(config: Config) {
+    val configModule = new DefaultConfigurationModule(config)
+    logger.info("Resetting all data...")
+    configModule.reset()
+    if(!config.scan) sys.exit(0)
   }
 
   private def runMainWindow(config: Config) {

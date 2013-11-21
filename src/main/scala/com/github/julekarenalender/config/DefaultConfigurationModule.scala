@@ -10,9 +10,6 @@ import com.github.julekarenalender.log.Logging
 class DefaultConfigurationModule(val configuration: Config,
                                  override val dataAccess: DataAccessModule = new DataAccessModule(SQLite())) extends ConfigurationModule with Logging {
 
-  if(config.reset) reset()
-  if(config.scan) importParticipants()
-
   def getParticipants: List[Participant] = {
     dataAccess.Participants.findAll()
   }
@@ -38,8 +35,6 @@ class DefaultConfigurationModule(val configuration: Config,
   }
 
   def scanParticipants: List[Participant] = {
-    logger.info("Scanning images/ and importing participants...")
-
     val participants =
       for {
         f: File <- participantImages
