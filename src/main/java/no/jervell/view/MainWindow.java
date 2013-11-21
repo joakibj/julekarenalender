@@ -248,8 +248,17 @@ public class MainWindow implements WindowListener {
                 showParticipants.setVisible(true);
             }
         });
+        JMenuItem redrawParticipant = new JMenuItem("Redraw");
+        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
+        redrawParticipant.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameLogic.redrawLast();
+            }
+        });
 
         participants.add(listParticipants);
+        participants.add(redrawParticipant);
 
         menuBar.add(file);
         menuBar.add(participants);

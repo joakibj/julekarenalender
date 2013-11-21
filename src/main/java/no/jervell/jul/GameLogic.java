@@ -74,6 +74,11 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         setState(State.INIT);
     }
 
+    public void redrawLast() {
+        script.resetLastWinner();
+        setState(State.LOOP);
+    }
+
     private void populatePerson(MainWindow mainWindow) {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>(person.getRows());
         for (Participant p : script.getParticipantList()) {
@@ -198,7 +203,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
             try {
                 configurationModule.syncParticipantsJava(script.getParticipantList());
             } catch (Exception e) {
-                logger.error("Unable to persist data. Reason: " + e);
+                logger.error("Unable to persist data.", e);
             }
         }
         this.state = state;
@@ -210,6 +215,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
     private class Script {
         private int pos;
+        private Participant lastWinner;
         private List<Integer> days;
         private Participant[] winners;
         private List<Participant> queue;
@@ -223,6 +229,20 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
 
         private void init() {
+            selectWinners();
+        }
+
+        public void resetLastWinner() {
+            pos--;
+            winners[pos] = pickWinner(lastWinner.daysWon(), queue);
+            for(Participant p : participants) {
+                if(p.equals(lastWinner)) {
+                    p.daysWon_$eq(0);
+                }
+            }
+        }
+
+        public void selectWinners() {
             participants = getFilteredList(configurationModule.getParticipantsJava(), getFirstDay());
             queue = new ArrayList<Participant>(participants);
             for (int i = 0; i < days.size(); ++i) {
@@ -318,6 +338,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
         public boolean move() {
             if (hasCurrent()) {
+                lastWinner = winners[pos];
                 pos++;
             }
             return hasCurrent();
