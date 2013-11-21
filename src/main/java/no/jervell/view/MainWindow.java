@@ -17,10 +17,11 @@ import no.jervell.view.swing.ImageView;
 import no.jervell.view.swing.WheelView;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class MainWindow implements WindowListener {
@@ -44,6 +45,8 @@ public class MainWindow implements WindowListener {
     private AnimationLoop loop;
     private JFrame frame;
     private JMenuBar menuBar;
+    private JDialog showParticipants;
+    private Map<Integer, JTextField> participantTextFields;
     private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
@@ -62,10 +65,12 @@ public class MainWindow implements WindowListener {
     public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
         this.days = days;
         this.configurationModule = configurationModule;
+        this.participantTextFields = new HashMap<Integer, JTextField>();
         buildWindow();
     }
 
     private void buildWindow() {
+        setupLookAndFeel();
         setupGUI();
         setupLogic();
         attachListeners();
@@ -75,6 +80,20 @@ public class MainWindow implements WindowListener {
     public void display() {
         frame.setVisible(true);
         loop.start();
+    }
+
+    private void setupLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            logger.error("Unable to start look and feel", e);
+        } catch (InstantiationException e) {
+            logger.error("Unable to start look and feel", e);
+        } catch (IllegalAccessException e) {
+            logger.error("Unable to start look and feel", e);
+        } catch (UnsupportedLookAndFeelException e) {
+            logger.error("Unable to start look and feel", e);
+        }
     }
 
     private void setupGUI() {
@@ -117,9 +136,9 @@ public class MainWindow implements WindowListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.isAltDown() && !menuBar.isVisible()) {
+                if (e.getKeyCode() == KeyEvent.VK_ALT && !menuBar.isVisible()) {
                     menuBar.setVisible(true);
-                } else if (e.isAltDown() && menuBar.isVisible()) {
+                } else if (e.getKeyCode() == KeyEvent.VK_ALT && menuBar.isVisible()) {
                     menuBar.setVisible(false);
                 }
             }
@@ -189,7 +208,7 @@ public class MainWindow implements WindowListener {
     private WheelView createBonusWheel() {
         WheelView wheelView = createWheelView();
         List<WheelView.Row> rows;
-        if(getBonusFiles().size() > 0) {
+        if (getBonusFiles().size() > 0) {
             rows = createCustomBonusWheel();
         } else {
             rows = createDefaultBonusWheel();
@@ -211,17 +230,104 @@ public class MainWindow implements WindowListener {
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
-
         JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 System.exit(0);
             }
         });
         file.add(exitMenuItem);
+
+        JMenu participants = new JMenu("Participants");
+        JMenuItem listParticipants = new JMenuItem("View/Edit");
+        listParticipants.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showParticipants = createShowParticipantsDialog();
+                showParticipants.setVisible(true);
+            }
+        });
+
+        participants.add(listParticipants);
+
         menuBar.add(file);
+        menuBar.add(participants);
         menuBar.setVisible(false);
         return menuBar;
+    }
+
+    private JDialog createShowParticipantsDialog() {
+        JDialog jd = new JDialog(SwingUtilities.windowForComponent(frame), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
+        jd.setLocationRelativeTo(frame);
+        jd.setLayout(new BorderLayout(10, 10));
+        jd.add(participantPane(), BorderLayout.NORTH);
+        jd.add(participantSaveClosePane(), BorderLayout.SOUTH);
+        jd.pack();
+        return jd;
+    }
+
+    private JPanel participantPane() {
+        JPanel pane = new JPanel();
+        pane.setBorder(new EmptyBorder(15, 15, 15, 15));
+        participantTextFields.clear();
+        Collection<Participant> participants = configurationModule.getParticipantsJava();
+        GridLayout layout = new GridLayout(participants.size() + 1, 3);
+        layout.setHgap(10);
+        layout.setVgap(2);
+        pane.setLayout(layout);
+        int row = 0;
+        for (Participant p : participants) {
+            pane.add(new JLabel(String.valueOf(p.id())), row, 0);
+            pane.add(new JLabel(p.name()), row, 1);
+            JTextField daysWonField = new JTextField(String.valueOf(p.daysWon()));
+            participantTextFields.put((Integer) p.id().get(), daysWonField);
+            pane.add(daysWonField, row, 2);
+            row++;
+        }
+        pane.add(new JLabel("Id"), row, 0);
+        pane.add(new JLabel("Name"), row, 1);
+        pane.add(new JLabel("dayWon"), row, 2);
+        return pane;
+    }
+
+    private JPanel participantSaveClosePane() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new FlowLayout());
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveParticipants();
+            }
+        });
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showParticipants.setVisible(false);
+            }
+        });
+        pane.add(saveButton);
+        pane.add(closeButton);
+        return pane;
+    }
+
+    private void saveParticipants() {
+        Collection<Participant> pTmp = configurationModule.getParticipantsJava();
+        List<Participant> participants = new ArrayList<Participant>(pTmp);
+        for (Participant p : participants) {
+            JTextField field = participantTextFields.get(p.id().get());
+            String text = field.getText();
+            if (isNumeric(text)) {
+                p.daysWon_$eq(Integer.parseInt(text));
+            }
+        }
+        configurationModule.syncParticipantsJava(participants);
+    }
+
+    private boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
 
     private ImageView createImageView(String file) {
@@ -275,7 +381,7 @@ public class MainWindow implements WindowListener {
     private List<WheelView.Row> createCustomBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
-        for(File bonusFile : getBonusFiles()) {
+        for (File bonusFile : getBonusFiles()) {
             rows.add(new WheelView.Row(bonusIndex, Images.apply().image(bonusFile)));
             bonusIndex++;
         }

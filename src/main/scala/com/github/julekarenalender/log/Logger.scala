@@ -24,6 +24,10 @@ trait ConsoleLogger extends Logger {
   override def error(logLine: String) {
     Console.err.println(logLine)
   }
+
+  override def error(logLine: String, thrown: Exception) {
+    Console.err.println(s"${logLine}. ${thrown.getClass}: ${thrown.getMessage}")
+  }
 }
 
 trait Logger {
@@ -31,4 +35,5 @@ trait Logger {
   def debug(logLine: String)
   def info(logLine: String)
   def error(logLine: String)
+  def error(logLine: String, thrown: Exception)
 }
