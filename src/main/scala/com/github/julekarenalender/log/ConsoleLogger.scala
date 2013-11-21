@@ -19,7 +19,7 @@ trait ConsoleLogger extends Logger {
     Console.err.println(logLine)
   }
 
-  override def error(logLine: String, thrown: Exception) {
-    Console.err.println(s"${logLine}. ${thrown.getClass}: ${thrown.getMessage}")
+  override def error(logLine: String, thrown: Throwable) {
+    Console.err.println(s"$logLine. ${thrown.getClass}: ${thrown.getMessage}")
   }
 }

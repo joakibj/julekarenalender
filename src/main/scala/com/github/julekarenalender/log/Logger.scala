@@ -7,5 +7,5 @@ trait Logger {
   def debug(logLine: String)
   def info(logLine: String)
   def error(logLine: String)
-  def error(logLine: String, thrown: Exception)
+  def error(logLine: String, thrown: Throwable)
 }

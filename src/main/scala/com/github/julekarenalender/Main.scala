@@ -1,8 +1,8 @@
 package com.github.julekarenalender
 
-import no.jervell.view.MainWindow
-import com.github.julekarenalender.config.{Parser, DefaultConfigurationModule, AppInfo}
+import com.github.julekarenalender.config.{DefaultConfigurationModule, AppInfo}
 import com.github.julekarenalender.log.Logging
+import view.MainGui
 
 case class Config(days: Seq[String] = Seq(), debug: Boolean = false, scan: Boolean = false, bonus: Boolean = false, reset: Boolean = false)
 
@@ -37,7 +37,7 @@ object Main extends App with Logging {
       if(config.debug) logger.enableDebug()
       if(config.reset) reset(config)
       if(config.scan) scan(config)
-      runMainWindow(config)
+      launchGui(config)
   } getOrElse {
     logger.error("Unable to parse arguments")
   }
@@ -56,7 +56,7 @@ object Main extends App with Logging {
     if(!config.scan) sys.exit(0)
   }
 
-  private def runMainWindow(config: Config) {
-    new MainWindow(Parser.toDays(config.days), new DefaultConfigurationModule(config)).display()
+  private def launchGui(config: Config) {
+    MainGui.launch(config)
   }
 }

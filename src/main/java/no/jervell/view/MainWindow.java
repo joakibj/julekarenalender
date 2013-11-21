@@ -70,7 +70,6 @@ public class MainWindow implements WindowListener {
     }
 
     private void buildWindow() {
-        setupLookAndFeel();
         setupGUI();
         setupLogic();
         attachListeners();
@@ -80,20 +79,6 @@ public class MainWindow implements WindowListener {
     public void display() {
         frame.setVisible(true);
         loop.start();
-    }
-
-    private void setupLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            logger.error("Unable to start look and feel", e);
-        } catch (InstantiationException e) {
-            logger.error("Unable to start look and feel", e);
-        } catch (IllegalAccessException e) {
-            logger.error("Unable to start look and feel", e);
-        } catch (UnsupportedLookAndFeelException e) {
-            logger.error("Unable to start look and feel", e);
-        }
     }
 
     private void setupGUI() {
