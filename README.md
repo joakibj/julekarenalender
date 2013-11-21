@@ -62,15 +62,17 @@ Each image should have the same filename as the name of the participant. Support
             Dewey.jpg
             Louie.jpg
 
-For first time import of participants, open up a `cmd.exe` or *nix shell and `cd` to the julekarenalender directory and run:
+For first time import of participants, open up a `cmd.exe` or *nix shell, `cd` to the julekarenalender directory and run:
 
     java -jar julekarenalender-2.0.0.jar --scan
 
-If someone joins late in the drawing period, simply add his image and re-run this command. If julekarenalender detects a new image based on the name, a new participant is added.
+If someone joins late in the drawing period, simply add his image and re-run this command. Then julekarenalender detects a new image based on the name, a new participant is added.
 
-If a mistake is made one can reset all configuration with:
+In the chance that a mistake is made one can reset all configuration with:
 
     java -jar julekarenalender-2.0.0.jar --reset
+
+Both the options above will not launch the GUI.
 
 Usage
 -----
@@ -78,6 +80,10 @@ Usage
 #### Default
 
 ![julekarenalender-default](http://joakibj.github.io/julekarenalender/images/julekarenalender-default.PNG)
+
+To draw once per day, simply run julekarenalender by double-clicking in Windows or running the jar in `cmd.exe` or a *nix shell:
+
+    java -jar julekarenalender-2.0.0.jar
 
 On the left side is a wheel representing each day in december until christmas eve [1..24]. On the right side is a wheel with each participant.
 Simply grab the participant wheel, swipe it down vertically and release to make it spin. The participant wheel will eventually stop and the text will blink red on the winner.
