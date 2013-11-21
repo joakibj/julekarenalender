@@ -17,11 +17,11 @@ import no.jervell.view.swing.ImageView;
 import no.jervell.view.swing.WheelView;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
 
 public class MainWindow implements WindowListener {
@@ -45,6 +45,8 @@ public class MainWindow implements WindowListener {
     private AnimationLoop loop;
     private JFrame frame;
     private JMenuBar menuBar;
+    private JDialog showParticipants;
+    private Map<Integer, JTextField> participantTextFields;
     private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
@@ -63,6 +65,7 @@ public class MainWindow implements WindowListener {
     public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
         this.days = days;
         this.configurationModule = configurationModule;
+        this.participantTextFields = new HashMap<Integer, JTextField>();
         buildWindow();
     }
 
@@ -241,7 +244,8 @@ public class MainWindow implements WindowListener {
         listParticipants.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createViewEditParticipantDialog();
+                showParticipants = createShowParticipantsDialog();
+                showParticipants.setVisible(true);
             }
         });
 
@@ -253,10 +257,22 @@ public class MainWindow implements WindowListener {
         return menuBar;
     }
 
+    private JDialog createShowParticipantsDialog() {
+        JDialog jd = new JDialog(SwingUtilities.windowForComponent(frame), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
+        jd.setLocationRelativeTo(frame);
+        jd.setLayout(new BorderLayout(10, 10));
+        jd.add(participantPane(), BorderLayout.NORTH);
+        jd.add(participantSaveClosePane(), BorderLayout.SOUTH);
+        jd.pack();
+        return jd;
+    }
+
     private JPanel participantPane() {
         JPanel pane = new JPanel();
+        pane.setBorder(new EmptyBorder(15, 15, 15, 15));
+        participantTextFields.clear();
         Collection<Participant> participants = configurationModule.getParticipantsJava();
-        GridLayout layout = new GridLayout(participants.size(), 3);
+        GridLayout layout = new GridLayout(participants.size() + 1, 3);
         layout.setHgap(10);
         layout.setVgap(2);
         pane.setLayout(layout);
@@ -264,19 +280,54 @@ public class MainWindow implements WindowListener {
         for (Participant p : participants) {
             pane.add(new JLabel(String.valueOf(p.id())), row, 0);
             pane.add(new JLabel(p.name()), row, 1);
-            pane.add(new JTextField(String.valueOf(p.daysWon())), row, 2);
+            JTextField daysWonField = new JTextField(String.valueOf(p.daysWon()));
+            participantTextFields.put((Integer) p.id().get(), daysWonField);
+            pane.add(daysWonField, row, 2);
             row++;
         }
+        pane.add(new JLabel("Id"), row, 0);
+        pane.add(new JLabel("Name"), row, 1);
+        pane.add(new JLabel("dayWon"), row, 2);
         return pane;
     }
 
-    private void createViewEditParticipantDialog() {
-        JDialog jd = new JDialog(SwingUtilities.windowForComponent(frame), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
-        jd.setTitle("View/Edit Participants");
-        jd.setLocationRelativeTo(frame);
-        jd.add(participantPane());
-        jd.pack();
-        jd.setVisible(true);
+    private JPanel participantSaveClosePane() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new FlowLayout());
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveParticipants();
+            }
+        });
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showParticipants.setVisible(false);
+            }
+        });
+        pane.add(saveButton);
+        pane.add(closeButton);
+        return pane;
+    }
+
+    private void saveParticipants() {
+        Collection<Participant> pTmp = configurationModule.getParticipantsJava();
+        List<Participant> participants = new ArrayList<Participant>(pTmp);
+        for (Participant p : participants) {
+            JTextField field = participantTextFields.get(p.id().get());
+            String text = field.getText();
+            if (isNumeric(text)) {
+                p.daysWon_$eq(Integer.parseInt(text));
+            }
+        }
+        configurationModule.syncParticipantsJava(participants);
+    }
+
+    private boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
 
     private ImageView createImageView(String file) {
