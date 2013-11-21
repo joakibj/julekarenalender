@@ -170,18 +170,18 @@ public class MainWindow implements WindowListener {
             personWheel.setPreferredSize(new Dimension(dim(550 + 180), dim(235)));
         }
 
-        Container c = new Container();
+        Container wheels = new Container();
         FlowLayout flowLayout = new FlowLayout();
         flowLayout.setAlignment(FlowLayout.CENTER);
-        c.setLayout(flowLayout);
-        c.add(dateWheel);
-        c.add(personWheel);
+        wheels.setLayout(flowLayout);
+        wheels.add(dateWheel);
+        wheels.add(personWheel);
         if (isBonusEnabled()) {
-            c.add(bonusWheel);
+            wheels.add(bonusWheel);
         }
 
         frame.setLayout(new BorderLayout(10, 10));
-        frame.add(c, BorderLayout.CENTER);
+        frame.add(wheels, BorderLayout.CENTER);
         frame.add(header, BorderLayout.NORTH);
         frame.add(footer, BorderLayout.SOUTH);
 
@@ -402,9 +402,9 @@ public class MainWindow implements WindowListener {
         List<File> bonusImages = new ArrayList<File>();
         try {
             File[] imageFiles = new File(".", "images").listFiles();
-            for (int i = 0; i < imageFiles.length; i++) {
-                if (imageFiles[i].getName().contains("bonus")) {
-                    bonusImages.add(imageFiles[i]);
+            for (File f : imageFiles) {
+                if (f.getName().contains("bonus")) {
+                    bonusImages.add(f);
                 }
             }
             return bonusImages;
