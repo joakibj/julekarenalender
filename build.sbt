@@ -13,8 +13,6 @@ resolvers += "sonatype-public" at "https://oss.sonatype.org/content/groups/publi
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.1.0"
 
-libraryDependencies += "com.beust" % "jcommander" % "1.29"
-
 libraryDependencies += "com.typesafe.slick" %% "slick" % "1.0.0"
 
 libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.7.15-M1"
