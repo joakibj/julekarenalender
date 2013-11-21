@@ -253,7 +253,7 @@ public class MainWindow implements WindowListener {
         redrawParticipant.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                gameLogic.redrawLast();
             }
         });
 

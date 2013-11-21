@@ -20,6 +20,8 @@ class DefaultConfigurationModule(val configuration: Config,
 
   def syncParticipantsJava(participants: java.util.List[Participant]): Try[Unit] = {
     val scalaParticipants = participants.asScala
+    logger.debug("Syncing participants...")
+    logger.debug(s"$participants")
     Try(
       for {
         p <- scalaParticipants
