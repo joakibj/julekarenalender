@@ -1,8 +1,8 @@
 package com.github.julekarenalender.config
 
 object AppInfo {
-  val ProgramName = "Julekarenalender"
-  val Version = "2.0.0-SNAPSHOT"
+  val ProgramName = BuildInfo.name
+  val Version = BuildInfo.version
 
   def title = toString
 

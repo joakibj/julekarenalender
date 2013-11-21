@@ -9,6 +9,14 @@ scalacOptions ++= Seq("-deprecation", "-feature", "-encoding", "utf8")
 
 fork in Test := true
 
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+
+buildInfoPackage := "com.github.julekarenalender.config"
+
 resolvers += "sonatype-public" at "https://oss.sonatype.org/content/groups/public"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.1.0"
