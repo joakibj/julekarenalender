@@ -77,7 +77,7 @@ Usage
 
 #### Default
 
-[julekarenalender-default](http://joakibj.github.io/julekarenalender/images/julekarenalender-default.PNG)
+![julekarenalender-default](http://joakibj.github.io/julekarenalender/images/julekarenalender-default.PNG)
 
 On the left side is a wheel representing each day in december until christmas eve [0..24]. On the right side is a wheel with each participant.
 Simply grab the participant wheel, swipe it down vertically and release to make it spin. The participant wheel will eventually stop and the text will blink red on the winner.
@@ -95,7 +95,7 @@ Tapping the ALT key toggles the menu bar. This is to check who won last week.
 
 #### Bonus wheel
 
-[julekarenalender-bonus](http://joakibj.github.io/julekarenalender/images/julekarenalender-bonus.PNG)
+![julekarenalender-bonus](http://joakibj.github.io/julekarenalender/images/julekarenalender-bonus.PNG)
 
 The bonus wheel is activated with the `--bonus` option. It can also be used in conjunction with multiple drawings.
 
