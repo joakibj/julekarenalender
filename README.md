@@ -91,7 +91,11 @@ Note that this means that you can draw winners for any day, at any point.
 
 Julekarenalender tracks winners and excludes anyone that have won previously. There is **only one winner** allowed per participant.
 
-Tapping the ALT key toggles the menu bar. This is to check who won last week.
+Tapping the ALT key toggles the menu bar. Here one can:
+
+* Exit the application (CTRL+Q)
+* View and edit the participants (CTRL+W)
+* Redraw a winner that was not physically available to retrieve a prize (CTRL+R)
 
 #### Bonus wheel
 
