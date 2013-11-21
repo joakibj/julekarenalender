@@ -233,6 +233,8 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
         }
 
         public void resetLastWinner() {
+            if(pos == 0) return;
+
             pos--;
             winners[pos] = pickWinner(lastWinner.daysWon(), queue);
             for(Participant p : participants) {
