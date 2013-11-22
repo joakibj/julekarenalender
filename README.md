@@ -41,6 +41,9 @@ Compile and run tests with:
 
     test
 
+Julekarenalender uses the `sbt-buildinfo` plugin to extract version information from the build files.
+So it must be compiled in sbt at least once before it can be built in an IDE.
+
 Build the application distributable with:
 
     assembly
