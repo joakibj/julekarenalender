@@ -4,6 +4,8 @@ import com.github.julekarenalender.Participant;
 import com.github.julekarenalender.config.AppInfo;
 import com.github.julekarenalender.config.ConfigurationModule;
 import com.github.julekarenalender.log.Logger$;
+import com.github.julekarenalender.view.awt.util.LabelMaker;
+import com.github.julekarenalender.view.awt.util.LabelPrinter;
 import com.github.julekarenalender.view.util.Images;
 import no.jervell.jul.GameLogic;
 import no.jervell.view.animation.impl.AnimationLoop;
@@ -12,7 +14,6 @@ import no.jervell.view.animation.impl.WheelAnimation;
 import no.jervell.view.animation.impl.WheelSpinner;
 import no.jervell.view.awt.Anchor;
 import no.jervell.view.awt.ImageLabel;
-import no.jervell.view.awt.Scaling;
 import no.jervell.view.swing.ImageView;
 import no.jervell.view.swing.WheelView;
 
@@ -25,14 +26,9 @@ import java.util.*;
 import java.util.List;
 
 public class MainWindow extends JFrame {
-    private static final String FONT_NAME = "Times New Roman";
-    private static final int FONT_SIZE = 50;
-    private static final Font PLAIN_FONT = new Font(FONT_NAME, Font.PLAIN, FONT_SIZE);
-    private static final Font BOLD_FONT = new Font(FONT_NAME, Font.BOLD, FONT_SIZE);
     private static final double MAX_VELOCITY = 100;
     private static final Color FRAME_BACKGROUND = Color.black;
     private static final Paint BACKGROUND_COLOUR = Color.white;
-    private static final Color TEXT_COLOUR = Color.black;
 
     private static final Logger$ logger = Logger$.MODULE$;
 
@@ -60,6 +56,9 @@ public class MainWindow extends JFrame {
     private WheelSpinner bonusWheelSpinner;
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
+
+    private LabelMaker labelMaker = LabelPrinter.apply();
+    private Images images = Images.apply();
 
     public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
         this.days = days;
@@ -329,7 +328,7 @@ public class MainWindow extends JFrame {
     }
 
     private ImageView createImageView(String file) {
-        ImageView image = new ImageView(Images.apply().staticImg(file));
+        ImageView image = new ImageView(images.staticImg(file));
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor),
@@ -347,14 +346,14 @@ public class MainWindow extends JFrame {
     private List<WheelView.Row> createDateWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         for (int i = 1; i <= 24; ++i) {
-            rows.add(new WheelView.Row(i, createDateLabel(i)));
+            rows.add(new WheelView.Row(i, labelMaker.createDateLabel(i)));
         }
         return rows;
     }
 
     private List<WheelView.Row> createPersonWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        no.jervell.view.awt.Image first = Images.apply().staticImg("spinnmeg.jpg");
+        no.jervell.view.awt.Image first = images.staticImg("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
         // Adding of people is handled in the gameLogic
@@ -362,17 +361,17 @@ public class MainWindow extends JFrame {
     }
 
     public ImageLabel createPersonWheelRow(Participant p) {
-        no.jervell.view.awt.Image img = Images.apply().localImg(p.image());
-        no.jervell.view.awt.Label lbl = createPersonLabel(p.name());
+        no.jervell.view.awt.Image img = images.localImg(p.image());
+        no.jervell.view.awt.Label lbl = labelMaker.createPersonLabel(p.name());
         lbl.setAnchor(Anchor.LEFT_CENTER);
         return new ImageLabel(img, lbl);
     }
 
     private List<WheelView.Row> createDefaultBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, Images.apply().staticImg("lue.jpg")));
-        rows.add(new WheelView.Row(1, Images.apply().staticImg("pakke.jpg")));
-        rows.add(new WheelView.Row(2, Images.apply().staticImg("lue.jpg")));
+        rows.add(new WheelView.Row(0, images.staticImg("lue.jpg")));
+        rows.add(new WheelView.Row(1, images.staticImg("pakke.jpg")));
+        rows.add(new WheelView.Row(2, images.staticImg("lue.jpg")));
         return rows;
     }
 
@@ -380,7 +379,7 @@ public class MainWindow extends JFrame {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
         for (File bonusFile : getBonusFiles()) {
-            rows.add(new WheelView.Row(bonusIndex, Images.apply().image(bonusFile)));
+            rows.add(new WheelView.Row(bonusIndex, images.image(bonusFile)));
             bonusIndex++;
         }
         return rows;
@@ -400,26 +399,6 @@ public class MainWindow extends JFrame {
             logger.error("Unable to open ./images folder: " + ex.getMessage());
             return bonusImages;
         }
-    }
-
-    private no.jervell.view.awt.Label createDateLabel(int date) {
-        no.jervell.view.awt.Label label = createLabel(String.valueOf(date));
-        label.setFont(BOLD_FONT);
-        return label;
-    }
-
-    private no.jervell.view.awt.Label createPersonLabel(String name) {
-        no.jervell.view.awt.Label label = createLabel(name.toUpperCase());
-        label.setScaling(Scaling.STRETCH);
-        return label;
-    }
-
-    private no.jervell.view.awt.Label createLabel(String text) {
-        no.jervell.view.awt.Label label = new no.jervell.view.awt.Label(text);
-        label.setPaint(TEXT_COLOUR);
-        label.setAnchor(Anchor.CENTER);
-        label.setFont(PLAIN_FONT);
-        return label;
     }
 
     private void center() {
