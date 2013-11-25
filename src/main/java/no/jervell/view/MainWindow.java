@@ -127,11 +127,7 @@ public class MainWindow extends JFrame {
             }
         });
 
-        addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
+        addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ALT && !menuBar.isVisible()) {
@@ -139,10 +135,6 @@ public class MainWindow extends JFrame {
                 } else if (e.getKeyCode() == KeyEvent.VK_ALT && menuBar.isVisible()) {
                     menuBar.setVisible(false);
                 }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
             }
         });
 
