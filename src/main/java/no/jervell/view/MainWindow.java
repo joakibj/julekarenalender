@@ -211,28 +211,30 @@ public class MainWindow extends JFrame {
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
-        exitMenuItem.addActionListener(new ActionListener() {
+        JMenu participants = new JMenu("Participants");
+
+        JMenuItem exit = new JMenuItem("Exit");
+        JMenuItem view = new JMenuItem("View/Edit");
+        JMenuItem redraw = new JMenuItem("Redraw");
+
+        exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
+        view.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
+        redraw.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
+
+
+        exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 System.exit(0);
             }
         });
-        file.add(exitMenuItem);
-
-        JMenu participants = new JMenu("Participants");
-        JMenuItem listParticipants = new JMenuItem("View/Edit");
-        listParticipants.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
-        listParticipants.addActionListener(new ActionListener() {
+        view.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showParticipants = createShowParticipantsDialog();
                 showParticipants.setVisible(true);
             }
         });
-        JMenuItem redrawParticipant = new JMenuItem("Redraw");
-        redrawParticipant.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
-        redrawParticipant.addActionListener(new ActionListener() {
+        redraw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int answer = JOptionPane.showConfirmDialog(self, "Are you sure you want to redraw?", "Redraw", JOptionPane.YES_NO_OPTION);
@@ -242,8 +244,9 @@ public class MainWindow extends JFrame {
             }
         });
 
-        participants.add(listParticipants);
-        participants.add(redrawParticipant);
+        file.add(exit);
+        participants.add(view);
+        participants.add(redraw);
 
         menuBar.add(file);
         menuBar.add(participants);
@@ -313,7 +316,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean saved = saveParticipants();
-                if(saved) {
+                if (saved) {
                     participantFeedbackLabel.setText("Changes saved!");
                 }
             }
