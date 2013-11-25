@@ -23,8 +23,12 @@ class ImagesSpec extends FlatSpec with ShouldMatchers with BeforeAndAfter {
     Images.localImg("Aesop.jpg") should be(Images.Blank)
   }
 
+  it should "create bonus images when bonus images exist" in {
+    Images.bonusImages() should have size(2)
+  }
+
   private def getTestResourceImagePath: String = {
-    getClass.getClassLoader.getResource(s"images").toURI.getPath
+    getClass.getClassLoader.getResource("images").toURI.getPath
   }
 
   trait MockImageLocations extends ImageLocations {

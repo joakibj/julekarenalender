@@ -20,17 +20,22 @@ import no.jervell.view.swing.WheelView;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainWindow extends JFrame {
     private static final double MAX_VELOCITY = 100;
     private static final Color FRAME_BACKGROUND = Color.black;
     private static final Paint BACKGROUND_COLOUR = Color.white;
-
-    private static final Logger$ logger = Logger$.MODULE$;
 
     /**
      * User interface size scaler, 100=native, 200=double size, 50=half size,
@@ -198,7 +203,7 @@ public class MainWindow extends JFrame {
     private WheelView createBonusWheel() {
         WheelView wheelView = createWheelView();
         List<WheelView.Row> rows;
-        if (getBonusFiles().size() > 0) {
+        if (images.bonusImages().size() > 0) {
             rows = createCustomBonusWheel();
         } else {
             rows = createDefaultBonusWheel();
@@ -408,27 +413,11 @@ public class MainWindow extends JFrame {
     private List<WheelView.Row> createCustomBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
-        for (File bonusFile : getBonusFiles()) {
-            rows.add(new WheelView.Row(bonusIndex, images.image(bonusFile)));
+        for (no.jervell.view.awt.Image image : images.bonusImages()) {
+            rows.add(new WheelView.Row(bonusIndex, image));
             bonusIndex++;
         }
         return rows;
-    }
-
-    private List<File> getBonusFiles() {
-        List<File> bonusImages = new ArrayList<File>();
-        try {
-            File[] imageFiles = new File(".", "images").listFiles();
-            for (File f : imageFiles) {
-                if (f.getName().contains("bonus")) {
-                    bonusImages.add(f);
-                }
-            }
-            return bonusImages;
-        } catch (Exception ex) {
-            logger.error("Unable to open ./images folder: " + ex.getMessage());
-            return bonusImages;
-        }
     }
 
     private void center() {
