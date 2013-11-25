@@ -43,7 +43,7 @@ public class MainWindow extends JFrame {
     private JMenuBar menuBar;
     private JDialog showParticipants;
     private Map<Integer, JTextField> participantTextFields;
-    private JLabel participantFeedbackLabel;
+    private JLabel participantFeedback;
     private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
@@ -255,35 +255,42 @@ public class MainWindow extends JFrame {
     }
 
     private JDialog createShowParticipantsDialog() {
-        JDialog jd = new JDialog(SwingUtilities.windowForComponent(this), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
-        jd.setLayout(new GridBagLayout());
+        JDialog dialog = new JDialog(SwingUtilities.windowForComponent(this), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
+        dialog.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        jd.add(participantPane(), constraints);
+        dialog.add(participantScrollPane(), constraints);
 
         constraints.fill = GridBagConstraints.VERTICAL;
         constraints.gridx = 0;
         constraints.gridy = 1;
-        participantFeedbackLabel = new JLabel("Editing...");
-        jd.add(participantFeedbackLabel, constraints);
+        participantFeedback = new JLabel("Editing...");
+        dialog.add(participantFeedback, constraints);
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 2;
-        jd.add(participantSaveClosePane(), constraints);
+        dialog.add(participantSaveClosePane(), constraints);
 
-        jd.pack();
-        jd.setLocationRelativeTo(this);
-        jd.setResizable(false);
-        return jd;
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+        return dialog;
     }
 
-    private JScrollPane participantPane() {
-        JPanel pane = new JPanel();
+    private JScrollPane participantScrollPane() {
+        JPanel pane = participantPane();
+        JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(new EmptyBorder(15, 15, 15, 15));
+        scrollPane.setPreferredSize(new Dimension(300, 250));
+        return scrollPane;
+    }
 
+    private JPanel participantPane() {
+        JPanel pane = new JPanel();
         participantTextFields.clear();
         Collection<Participant> participants = configurationModule.getParticipantsJava();
         GridLayout layout = new GridLayout(participants.size() + 1, 3);
@@ -302,32 +309,32 @@ public class MainWindow extends JFrame {
         pane.add(new JLabel("Id"), row, 0);
         pane.add(new JLabel("Name"), row, 1);
         pane.add(new JLabel("dayWon"), row, 2);
-        JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBorder(new EmptyBorder(15, 15, 15, 15));
-        scrollPane.setPreferredSize(new Dimension(300, 250));
-        return scrollPane;
+        return pane;
     }
 
     private JPanel participantSaveClosePane() {
         JPanel pane = new JPanel();
         pane.setLayout(new FlowLayout());
+
         JButton saveButton = new JButton("Save");
+        JButton closeButton = new JButton("Close");
+
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean saved = saveParticipants();
                 if (saved) {
-                    participantFeedbackLabel.setText("Changes saved!");
+                    participantFeedback.setText("Changes saved!");
                 }
             }
         });
-        JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showParticipants.setVisible(false);
             }
         });
+
         pane.add(saveButton);
         pane.add(closeButton);
         return pane;
