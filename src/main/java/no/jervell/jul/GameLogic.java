@@ -76,6 +76,7 @@ public class GameLogic implements Animation, WheelAnimation.Listener, WheelSpinn
 
     public void redrawLast() {
         if(isBonusEnabled()) bonus.setEnabled(false);
+        blink.stop();
         script.resetLastWinner();
         setState(State.LOOP);
     }
