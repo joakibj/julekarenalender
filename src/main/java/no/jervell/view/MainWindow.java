@@ -43,6 +43,7 @@ public class MainWindow extends JFrame {
     private JMenuBar menuBar;
     private JDialog showParticipants;
     private Map<Integer, JTextField> participantTextFields;
+    private JLabel participantFeedbackLabel;
     private List<Integer> days;
     private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
@@ -260,28 +261,45 @@ public class MainWindow extends JFrame {
 
     private JDialog createShowParticipantsDialog() {
         JDialog jd = new JDialog(SwingUtilities.windowForComponent(this), "View/Edit Participants", JDialog.ModalityType.APPLICATION_MODAL);
-        jd.setLocationRelativeTo(this);
-        jd.setLayout(new BorderLayout(10, 10));
-        jd.add(participantPane(), BorderLayout.NORTH);
-        jd.add(participantSaveClosePane(), BorderLayout.SOUTH);
+        jd.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        jd.add(participantPane(), constraints);
+
+        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        participantFeedbackLabel = new JLabel("Editing...");
+        jd.add(participantFeedbackLabel, constraints);
+
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        jd.add(participantSaveClosePane(), constraints);
+
         jd.pack();
+        jd.setLocationRelativeTo(this);
+        jd.setResizable(false);
         return jd;
     }
 
-    private JPanel participantPane() {
+    private JScrollPane participantPane() {
         JPanel pane = new JPanel();
-        pane.setBorder(new EmptyBorder(15, 15, 15, 15));
+
         participantTextFields.clear();
         Collection<Participant> participants = configurationModule.getParticipantsJava();
         GridLayout layout = new GridLayout(participants.size() + 1, 3);
         layout.setHgap(10);
-        layout.setVgap(2);
+        layout.setVgap(5);
         pane.setLayout(layout);
         int row = 0;
         for (Participant p : participants) {
             pane.add(new JLabel(String.valueOf(p.id())), row, 0);
             pane.add(new JLabel(p.name()), row, 1);
-            JTextField daysWonField = new JTextField(String.valueOf(p.daysWon()));
+            JTextField daysWonField = new JTextField(String.valueOf(p.daysWon()), 2);
             participantTextFields.put((Integer) p.id().get(), daysWonField);
             pane.add(daysWonField, row, 2);
             row++;
@@ -289,7 +307,10 @@ public class MainWindow extends JFrame {
         pane.add(new JLabel("Id"), row, 0);
         pane.add(new JLabel("Name"), row, 1);
         pane.add(new JLabel("dayWon"), row, 2);
-        return pane;
+        JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(new EmptyBorder(15, 15, 15, 15));
+        scrollPane.setPreferredSize(new Dimension(300, 250));
+        return scrollPane;
     }
 
     private JPanel participantSaveClosePane() {
@@ -299,7 +320,10 @@ public class MainWindow extends JFrame {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveParticipants();
+                boolean saved = saveParticipants();
+                if(saved) {
+                    participantFeedbackLabel.setText("Changes saved!");
+                }
             }
         });
         JButton closeButton = new JButton("Close");
@@ -314,7 +338,7 @@ public class MainWindow extends JFrame {
         return pane;
     }
 
-    private void saveParticipants() {
+    private boolean saveParticipants() {
         Collection<Participant> pTmp = configurationModule.getParticipantsJava();
         List<Participant> participants = new ArrayList<Participant>(pTmp);
         for (Participant p : participants) {
@@ -324,7 +348,7 @@ public class MainWindow extends JFrame {
                 p.daysWon_$eq(Integer.parseInt(text));
             }
         }
-        configurationModule.syncParticipantsJava(participants);
+        return configurationModule.syncParticipantsJava(participants).isSuccess();
     }
 
     private boolean isNumeric(String str) {
