@@ -38,6 +38,7 @@ public class MainWindow extends JFrame {
      */
     //TODO: Make enum?
     final static int scale = 125;
+    private final MainWindow self = this;
     private AnimationLoop loop;
     private JMenuBar menuBar;
     private JDialog showParticipants;
@@ -241,7 +242,10 @@ public class MainWindow extends JFrame {
         redrawParticipant.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameLogic.redrawLast();
+                int answer = JOptionPane.showConfirmDialog(self, "Are you sure you want to redraw?", "Redraw", JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    gameLogic.redrawLast();
+                }
             }
         });
 
