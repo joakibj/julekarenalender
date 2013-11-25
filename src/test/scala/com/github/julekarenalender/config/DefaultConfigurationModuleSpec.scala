@@ -22,8 +22,9 @@ class DefaultConfigurationModuleSpec extends FlatSpec with ShouldMatchers with B
       Participant(None, "Bjarne", "Bjarne.jpg", 0),
       Participant(None, "Clara", "Clara.jpg", 0)
     )
-    configModule.createParticipants(toBeCreated) should be(List(1,2,3))
+    val createdIds = configModule.createParticipants(toBeCreated)
     configModule.getParticipants should have size (3)
+    configModule.getParticipants.map(_.id.get) should be(createdIds)
   }
 
   it should "sync participants" in {
