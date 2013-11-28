@@ -1,46 +1,213 @@
-Julekarenalender
-=============
+Julekarenalender v2.0.0
+=======================
 
-De første versjonene av Julekarenalenderen ble utviklet og vedlikeholdt av Arne C. Jervell på NAV Arena prosjektet med Visma Consulting (den gang TietoEnator) som hovedleverandør og Computas som underleverandør. Julekarenalenderen har blitt brukt i mange år på NAV Arena, hvor både leverandør og kunde har fått være med på trekning.
+Julekarenalender is a secret santa desktop application written in Java and Scala. It is adapted for the holidays, but can be used for any purpose that involves random drawing of winners. It is ideal for a project team or office with access to a TV connected with a computer.
 
-Senere versjoner har blitt vedlikeholdt av Esben Stenwig (Visma Consulting) og Lotta Nordling (Computas).
+Features:
 
-Siste oppdateringer er gjort av Joakim Bjørnstad (Visma Consulting).
+* One-armed bandit style wheel with random winner draw
+* Bonus wheel for custom purpose
+* User management and winner tracking
 
-Bygging
------------
-* Bygg og pakk applikasjonen med **mvn clean install assembly:single**
-* Bygget pakkes som en zip-fil i target mappen
+The purpose of this project is to cooperate on writing code, learning Scala and migrate a desktop application from Java to Scala.
 
-Konfigurasjon
------------
-1. Extract zip-filen i target mappen til ønsket sted
-1. Samle sammen bilder som representerer alle i teamet i **jpg** format
-1. Endre julekarenalender.csv
-  * Filen har 4 semikolon ; separerte kolonner
-  * Første kolonne har navnet til deltakeren. Fornavn holder her
-  * Andre kolonne har **jpg** bildefilen til deltakeren. Unngå mellomrom
-  * Tredje kolonne har hvilken dag vedkommende vant. Denne skal være blank under førstegangskonfigurasjon. Denne kolonnen utelukker at deltakeren kan trekkes etter den dagen.
-  * Fjerde kolonne er reservert notater og blir ikke lest av applikasjonen
-1. **jpg** bildefiler legges i img undermappen
-1. (Valgfritt) Man kan konfigurere de 3 bildene i bonushjulet (det lille hjulet til høyre) ved å legge bilder "bonus0.jpg", "bonus1.jpg" og "bonus_1.jpg" i **img** mappen. På denne måten kan man skreddersy applikasjonen til prosjektet. Hvis ikke disse bildene finnes, vil standard bli brukt:
-  * bonus0.jpg overstyrer et bilde av en jokerlue
-  * bonus1.jpg overstyrer et bilde av en pakke
-  * bonus_1.jpg overstyrer et bilde av Joakim Lystad (NAV direktør)
+**Please note:** All active development takes place in the `develop` branch, which currently holds the in-development Scala version.
+Stable releases are merged to [`master`](https://github.com/joakibj/julekarenalender/tree/master) and tagged. The development branch for the Java version of Julekarenalender can be found in the [`julekarenalender-java`](https://github.com/joakibj/julekarenalender/tree/julekarenalender-java) branch (This branch is **only** for bugfixes to the Java version).
 
-Bruksanvisning
------------
-1. Julekarenalenderen kan startes på to måter, avhengig av bruk:
-  * **Én trekning per dag:** Dobbelklikk på jar fil i mappen som er inneholdt i zip-filen
-  * **Flere trekninger på en dag:**
-      * Start cmd.exe eller et *nix Shell
-      * cd til mappen som har jar-filen
-      * Start julekarenalenderen med: **java -jar [jar-fil] [ARGS]**
-          * **ARGS** er en liste av tall med hvilke dager det skal foregå trekning. For eksempel: Det er mandag 3. desember og det skal trekkes totalt 6 pakker. Det trekkes to pakker for 1. desember, to pakker for 2. desember og to pakker for 3. desember. Julekarenalenderen startes da med ARGS: 1 1 2 2 3 3
-          * Etter at to vinnere for 1. desember er funnet i eksempelet ovenfor, vil dag-hjulet helt til venstre endres til neste dag
-1. **Forrige dags vinner** (ved flere trekninger samme dag: Forrige vinner) snurrer det store hjulet for å finne en vinner. Dette gjøres ved å ta tak i det store hjulet, hvor man tar tak i det og drar ned i en vertikal bevegelse og slipper. Deltakeren hjulet stopper på er dagens vinner
-  * Hvis vedkommende ikke er til stede til å motta gaven, kan det store hjulet snurres på nytt for å finne en annen vinner
-1. Når en vinner er funnet for dagen får vedkommende sin gave, samt har anledning til å snurre på bonushjulet
-  * På Arena ble bonushjulet brukt til å få bonusgave hvis man fikk bildet av pakken. Her er det åpent for andre ritualer, avhengig av teamet. Det kan være et bilde for gevinst eller "straff"
-1. Etter at bonushjulet har landet, blir vinneren for dagen registrert i csv filen. Man får ikke snurre på nytt
-1. De som tidligere har fått gave (har fått registert dag nummer i csv filen) blir utelatt i hjulet for videre trekninger
+The last stable release was v1.3.1 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v1.3.1).
+
+Prerequisites
+-------------
+
+The tools needed to build julekarenalender are:
+
+* Java 7 JDK
+* [sbt](http://www.scala-sbt.org/)
+
+`sbt` will fetch itself and the required Scala compiler.
+
+Building
+--------
+
+Start sbt with:
+
+    sbt
+
+The following commands are used in the `sbt` command prompt.
+
+Compile and run tests with:
+
+    compile
+
+    test
+
+Julekarenalender uses the `sbt-buildinfo` plugin to extract version information from the build files.
+So it must be compiled in sbt at least once before it can be built in an IDE.
+
+Build the application distributable with:
+
+    assembly
+
+The packaged .jar can be found in `julekarenalender\target\scala-2.10`
+
+Configuration
+-------------
+
+First time configuration of julekarenalender requires a set of images representing the participants to be put in an `images` folder where the julekarenalender jar is located.
+Each image should have the same filename as the name of the participant. Supported image formats are `png` and `jpg`. Lowercase or uppercase is irrelevant. e.g.:
+
+    julekarenalender-2.0.0/
+        julekarenalender-2.0.0.jar
+        images/
+            Dolly.png
+            Donald.jpg
+            Huey.jpg
+            Dewey.jpg
+            Louie.jpg
+
+For first time import of participants, open up a `cmd.exe` or *nix shell, `cd` to the julekarenalender directory and run:
+
+    java -jar julekarenalender-2.0.0.jar --scan
+
+If someone joins late in the drawing period, simply add his image and re-run this command. Then julekarenalender detects a new image based on the name, a new participant is added.
+
+In the chance that a mistake is made one can reset all configuration with:
+
+    java -jar julekarenalender-2.0.0.jar --reset
+
+Both the options above will not launch the GUI.
+
+Usage
+-----
+
+#### Default
+
+![julekarenalender-default](http://joakibj.github.io/julekarenalender/images/julekarenalender-default.PNG)
+
+To draw once per day, simply run julekarenalender by double-clicking in Windows or running the jar in `cmd.exe` or a *nix shell:
+
+    java -jar julekarenalender-2.0.0.jar
+
+On the left side is a wheel representing each day in december until christmas eve [1..24]. On the right side is a wheel with each participant.
+Simply grab the participant wheel, swipe it down vertically and release to make it spin. The participant wheel will eventually stop and the text will blink red on the winner.
+
+If one wants to draw more than one winner per day, this is configured via the command line. For example, assume day 2 is a monday, starting the application with:
+
+    java -jar julekarenalender-2.0.0.jar 2 3 4 5 6 6
+
+This means that there will be six drawings. One for each workday in the week and two on the friday. This is useful if your team only does one secret santa drawing per workweek.
+Note that this means that you can draw winners for any day, at any point.
+
+Julekarenalender tracks winners and excludes anyone that have won previously. There is **only one winner** allowed per participant.
+
+Tapping the ALT key toggles the menu bar. Here one can:
+
+* Exit the application (CTRL+Q)
+* View and edit the participants (CTRL+W)
+* Redraw a winner that was not physically available to retrieve a prize (CTRL+R)
+
+#### Bonus wheel
+
+![julekarenalender-bonus](http://joakibj.github.io/julekarenalender/images/julekarenalender-bonus.PNG)
+
+The bonus wheel is activated with the `--bonus` option. It can also be used in conjunction with multiple drawings.
+
+    java -jar julekarenalender-2.0.0.jar --bonus
+
+If your team wants some extra spice, julekarenalender can be started with the bonus option. This will add a bonus wheel on the right side that has to be spun after a winner is found.
+The bonus wheel can be some sort of extra reward or act as a minigame, be creative!
+
+Per default there are three items in the bonus wheel: an image of a holiday present and two images of a joker cap. This can be overriden by adding custom images in the image folder.
+Julekarenalender scans the images folder for any `png` or `jpg` containing "bonus" in the filename. For example:
+
+    julekarenalender-2.0.0/
+        julekarenalender-2.0.0.jar
+        images/
+            bonus0.jpg
+            bonus1.jpg
+            bonus2.jpg
+            bonus3.jpg
+            Dolly.png
+            Donald.jpg
+            Huey.jpg
+            Dewey.jpg
+            Louie.jpg
+
+This adds four custom bonus images to the bonus wheel.
+
+#### Printed usage
+
+```
+Julekarenalender 2.0.0-SNAPSHOT
+Usage: julekarenalender [options] [days]
+
+  days
+        List of days there should be a draw. Optional
+  --scan
+        Scans the images/ folder for participants. No GUI is launched
+  --reset
+        Resets all configuration. Use at own risk! No GUI is launched
+  --bonus
+        Enables the bonus wheel
+  --debug
+        Turns on debug mode
+  --help
+        prints this usage text
+```
+
+Roadmap
+-------
+
+Goal: Migrate application from Java to Scala and play with new technologies along the way.
+
+Please refer to the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open) on github for a more comprehensive overview.
+
+######v2.0.0 (holiday 2013)
+
+- [X] Migrated from maven to sbt
+- [X] SQLite as persistent datastore instead of CSV
+- [X] Slick integration with persistent datastore, as the Configuration repository
+- [X] Configuration module UI to set up participants and track winners. GUI panel
+- [X] Supply self-contained jar that has a minimum set of configuration to run
+- [X] Package jar with dependencies
+- [/] Features needed for holidays 2013
+
+######v2.1.0 (holiday 2014)
+
+- [ ] Swing/AWT GUI swapped with ScalaFX
+
+Contributing
+------------
+
+Pull requests are always welcome. :-)
+
+How you can contribute:
+
+* Make the project more *idiomatic Scala*
+* Implement items on the [issue list](https://github.com/joakibj/julekarenalender/issues?state=open)
+* Graphics
+* Feature requests
+* Report bugs
+
+To contribute code: fork `develop`, create your own `feature/branch`, submit a pull request
+
+History
+-------
+
+Julekarenalender was created by Arne C. Jervell in 2008 as a Java project.
+
+It has been used for several years at the NAV Arena project during the holidays from 2008-2011. In 2012-2013 it was used at the NAV Brev&Arkiv project.
+
+The current maintainer is Joakim Bjørnstad who is porting the application to Scala.
+
+Other contributors:
+
+* Esben Stenwig
+* Lotta Nordling
+
+License
+-------
+
+MIT License.
+
+Please see the LICENSE file for the license text in verbatim.
