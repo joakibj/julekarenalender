@@ -14,7 +14,7 @@ The purpose of this project is to cooperate on writing code, learning Scala and 
 **Please note:** All active development takes place in the `develop` branch, which currently holds the in-development Scala version.
 Stable releases are merged to [`master`](https://github.com/joakibj/julekarenalender/tree/master) and tagged. The development branch for the Java version of Julekarenalender can be found in the [`julekarenalender-java`](https://github.com/joakibj/julekarenalender/tree/julekarenalender-java) branch (This branch is **only** for bugfixes to the Java version).
 
-The last stable release was v1.3.1 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v1.3.1).
+The last stable release was v2.0.0 and [can be found here](https://github.com/joakibj/julekarenalender/releases/tag/v2.0.0).
 
 Prerequisites
 -------------

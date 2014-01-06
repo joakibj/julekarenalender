@@ -20,8 +20,9 @@ class Images extends Logging {
 
   def staticImg(name: String): Image = {
     val staticFilename = s"$staticImageLocation/$name"
+
     Try(getClass.getClassLoader.getResource(staticFilename).toURI) match {
-      case Success(uri) => image(new File(uri))
+      case Success(uri) => loadGeneric(uri).get
       case Failure(ex) => {
         logger.error(s"Unable to load static image: $staticFilename")
         Blank
