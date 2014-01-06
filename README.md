@@ -170,11 +170,12 @@ Please refer to the [issue list](https://github.com/joakibj/julekarenalender/iss
 - [X] Configuration module UI to set up participants and track winners. GUI panel
 - [X] Supply self-contained jar that has a minimum set of configuration to run
 - [X] Package jar with dependencies
-- [/] Features needed for holidays 2013
+- [X] Features needed for holidays 2013
 
 ######v2.1.0 (holiday 2014)
 
 - [ ] Swing/AWT GUI swapped with ScalaFX
+- [ ] Feature: remove participant
 
 Contributing
 ------------

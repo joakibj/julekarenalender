@@ -3,7 +3,6 @@ package no.jervell.view;
 import com.github.julekarenalender.Participant;
 import com.github.julekarenalender.config.AppInfo;
 import com.github.julekarenalender.config.ConfigurationModule;
-import com.github.julekarenalender.log.Logger$;
 import com.github.julekarenalender.view.awt.util.LabelMaker;
 import com.github.julekarenalender.view.awt.util.LabelPrinter;
 import com.github.julekarenalender.view.util.Images;
@@ -225,7 +224,6 @@ public class MainWindow extends JFrame {
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         view.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
         redraw.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
-
 
         exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
