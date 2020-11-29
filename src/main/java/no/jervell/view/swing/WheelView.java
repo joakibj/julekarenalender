@@ -1,20 +1,26 @@
 package no.jervell.view.swing;
 
-import com.github.julekarenalender.log.Logger$;
+
 import no.jervell.view.animation.impl.FrameCounter;
 import no.jervell.view.awt.Paintable;
 import no.jervell.view.gfx.ImageFilter;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DirectColorModel;
+import java.awt.image.ImageObserver;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.PixelGrabber;
+
+import static com.github.julekarenalender.JulekarenalenderKt.logger;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class WheelView extends Component {
 
-    private static final Logger$ logger = Logger$.MODULE$;
 
     // Model data
     private java.util.List<Row> rows;
