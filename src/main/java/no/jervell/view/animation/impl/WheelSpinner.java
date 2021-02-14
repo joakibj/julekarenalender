@@ -1,16 +1,18 @@
 package no.jervell.view.animation.impl;
 
-import com.github.julekarenalender.log.Logger$;
+
 import no.jervell.view.swing.WheelView;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static com.github.julekarenalender.JulekarenalenderKt.logger;
+
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class WheelSpinner extends MouseAdapter {
-    private static final Logger$ logger = Logger$.MODULE$;
+
 
     WheelAnimation animation;
 

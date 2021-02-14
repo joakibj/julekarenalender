@@ -1,13 +1,15 @@
 package no.jervell.view.animation.impl;
 
-import com.github.julekarenalender.log.Logger$;
+
 import no.jervell.view.animation.Animation;
+
+import static com.github.julekarenalender.JulekarenalenderKt.logger;
 
 /**
  * @author Arne C. Jervell (arne@jervell.no)
  */
 public class AnimationLoop extends Thread {
-    private static final Logger$ logger = Logger$.MODULE$;
+
     private volatile boolean keepRunning;
     private DefaultTimer timer;
     private Animation[] animations;

@@ -1,11 +1,9 @@
 package no.jervell.view;
 
-import com.github.julekarenalender.Participant;
-import com.github.julekarenalender.config.AppInfo;
-import com.github.julekarenalender.config.ConfigurationModule;
-import com.github.julekarenalender.view.awt.util.LabelMaker;
-import com.github.julekarenalender.view.awt.util.LabelPrinter;
-import com.github.julekarenalender.view.util.Images;
+import com.github.julekarenalender.App;
+import com.github.julekarenalender.domain.ParticipantData;
+import com.github.julekarenalender.gui.Images;
+import com.github.julekarenalender.gui.LabelMaker;
 import no.jervell.jul.GameLogic;
 import no.jervell.view.animation.impl.AnimationLoop;
 import no.jervell.view.animation.impl.FrameCounter;
@@ -19,17 +17,13 @@ import no.jervell.view.swing.WheelView;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.awt.event.*;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.github.julekarenalender.JulekarenalenderKt.currentGame;
+import static com.github.julekarenalender.JulekarenalenderKt.logger;
+import static com.github.julekarenalender.game.GameKt.listParticipants;
 
 public class MainWindow extends JFrame {
     private static final double MAX_VELOCITY = 100;
@@ -46,10 +40,9 @@ public class MainWindow extends JFrame {
     private AnimationLoop loop;
     private JMenuBar menuBar;
     private JDialog showParticipants;
-    private Map<Integer, JTextField> participantTextFields;
+    private Map<String, JTextField> participantTextFields;
     private JLabel participantFeedback;
     private List<Integer> days;
-    private ConfigurationModule configurationModule;
     private GameLogic gameLogic;
 
     private WheelView dateWheel;
@@ -63,13 +56,12 @@ public class MainWindow extends JFrame {
     private WheelAnimation personWheelAnimation;
     private WheelAnimation bonusWheelAnimation;
 
-    private LabelMaker labelMaker = LabelPrinter.apply();
-    private Images images = Images.apply();
+    private LabelMaker labelMaker = new LabelMaker();
+    private Images images = new Images();
 
-    public MainWindow(List<Integer> days, ConfigurationModule configurationModule) {
-        this.days = days;
-        this.configurationModule = configurationModule;
-        this.participantTextFields = new HashMap<Integer, JTextField>();
+    public MainWindow() {
+        this.days = currentGame.getGameParameters().getDays();
+        this.participantTextFields = new HashMap<>();
 
         buildWindow();
     }
@@ -89,7 +81,7 @@ public class MainWindow extends JFrame {
 
     private void setupFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle(AppInfo.title());
+        setTitle(App.title);
         getContentPane().setBackground(FRAME_BACKGROUND);
     }
 
@@ -111,7 +103,7 @@ public class MainWindow extends JFrame {
             bonusWheelSpinner = new WheelSpinner(bonusWheelAnimation, MAX_VELOCITY);
         }
 
-        gameLogic = new GameLogic(days, configurationModule, this);
+        gameLogic = new GameLogic(days, currentGame, this);
 
         loop = new AnimationLoop();
         if (isBonusEnabled()) {
@@ -128,6 +120,10 @@ public class MainWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 loop.end();
                 dispose();
+                if (logger.isDebug()) {
+                    logger.debug("Current game status:");
+                    listParticipants();
+                }
             }
         });
 
@@ -202,7 +198,7 @@ public class MainWindow extends JFrame {
     private WheelView createBonusWheel() {
         WheelView wheelView = createWheelView();
         List<WheelView.Row> rows;
-        if (images.bonusImages().size() > 0) {
+        if (images.getBonusImages().size() > 0) {
             rows = createCustomBonusWheel();
         } else {
             rows = createDefaultBonusWheel();
@@ -224,6 +220,7 @@ public class MainWindow extends JFrame {
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         view.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
         redraw.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
+
 
         exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -280,7 +277,7 @@ public class MainWindow extends JFrame {
 
         dialog.pack();
         dialog.setLocationRelativeTo(this);
-        dialog.setResizable(false);
+        dialog.setResizable(true);
         return dialog;
     }
 
@@ -288,24 +285,24 @@ public class MainWindow extends JFrame {
         JPanel pane = participantPane();
         JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EmptyBorder(15, 15, 15, 15));
-        scrollPane.setPreferredSize(new Dimension(300, 250));
+        scrollPane.setPreferredSize(new Dimension(500, 250));
         return scrollPane;
     }
 
     private JPanel participantPane() {
         JPanel pane = new JPanel();
         participantTextFields.clear();
-        Collection<Participant> participants = configurationModule.getParticipantsJava();
+        Collection<ParticipantData> participants = currentGame.getParticipants();
         GridLayout layout = new GridLayout(participants.size() + 1, 3);
-        layout.setHgap(10);
-        layout.setVgap(5);
+//        layout.setHgap(10);
+//        layout.setVgap(5);
         pane.setLayout(layout);
         int row = 0;
-        for (Participant p : participants) {
-            pane.add(new JLabel(String.valueOf(p.id())), row, 0);
-            pane.add(new JLabel(p.name()), row, 1);
-            JTextField daysWonField = new JTextField(String.valueOf(p.daysWon()), 2);
-            participantTextFields.put((Integer) p.id().get(), daysWonField);
+        for (ParticipantData p : participants) {
+            pane.add(new JLabel(p.getUuid()), row, 0);
+            pane.add(new JLabel(p.getName()), row, 1);
+            JTextField daysWonField = new JTextField(String.valueOf(p.getDateWon()), 2);
+            participantTextFields.put(p.getUuid(), daysWonField);
             pane.add(daysWonField, row, 2);
             row++;
         }
@@ -344,16 +341,16 @@ public class MainWindow extends JFrame {
     }
 
     private boolean saveParticipants() {
-        Collection<Participant> pTmp = configurationModule.getParticipantsJava();
-        List<Participant> participants = new ArrayList<Participant>(pTmp);
-        for (Participant p : participants) {
-            JTextField field = participantTextFields.get(p.id().get());
+        Collection<ParticipantData> pTmp = currentGame.getParticipants();
+        List<ParticipantData> participants = new ArrayList<ParticipantData>(pTmp);
+        for (ParticipantData p : participants) {
+            JTextField field = participantTextFields.get(p.getUuid());
             String text = field.getText();
             if (isNumeric(text)) {
-                p.daysWon_$eq(Integer.parseInt(text));
+                p.setDateWon(Integer.parseInt(text));
             }
         }
-        return configurationModule.syncParticipantsJava(participants).isSuccess();
+        return true;
     }
 
     private boolean isNumeric(String str) {
@@ -361,7 +358,7 @@ public class MainWindow extends JFrame {
     }
 
     private ImageView createImageView(String file) {
-        ImageView image = new ImageView(images.staticImg(file));
+        ImageView image = new ImageView(images.getStaticImg(file));
         Dimension size = image.getPreferredSize();
         int imageReductionFactor = scale > 100 ? 2 : 1;
         image.setPreferredSize(new Dimension(dim((int) size.getWidth() / imageReductionFactor),
@@ -386,32 +383,32 @@ public class MainWindow extends JFrame {
 
     private List<WheelView.Row> createPersonWheelRowList() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        no.jervell.view.awt.Image first = images.staticImg("spinnmeg.jpg");
+        no.jervell.view.awt.Image first = images.getStaticImg("spinnmeg.jpg");
         first.setAnchor(Anchor.CENTER);
         rows.add(new WheelView.Row(null, first));
         // Adding of people is handled in the gameLogic
         return rows;
     }
 
-    public ImageLabel createPersonWheelRow(Participant p) {
-        no.jervell.view.awt.Image img = images.localImg(p.image());
-        no.jervell.view.awt.Label lbl = labelMaker.createPersonLabel(p.name());
+    public ImageLabel createPersonWheelRow(ParticipantData p) {
+        no.jervell.view.awt.Image img = images.getLocalImg(p.getImage());
+        no.jervell.view.awt.Label lbl = labelMaker.createPersonLabel(p.getName());
         lbl.setAnchor(Anchor.LEFT_CENTER);
         return new ImageLabel(img, lbl);
     }
 
     private List<WheelView.Row> createDefaultBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
-        rows.add(new WheelView.Row(0, images.staticImg("lue.jpg")));
-        rows.add(new WheelView.Row(1, images.staticImg("pakke.jpg")));
-        rows.add(new WheelView.Row(2, images.staticImg("lue.jpg")));
+        rows.add(new WheelView.Row(0, images.getStaticImg("lue.jpg")));
+        rows.add(new WheelView.Row(1, images.getStaticImg("pakke.jpg")));
+        rows.add(new WheelView.Row(2, images.getStaticImg("lue.jpg")));
         return rows;
     }
 
     private List<WheelView.Row> createCustomBonusWheel() {
         List<WheelView.Row> rows = new ArrayList<WheelView.Row>();
         int bonusIndex = 0;
-        for (no.jervell.view.awt.Image image : images.bonusImages()) {
+        for (no.jervell.view.awt.Image image : images.getBonusImages()) {
             rows.add(new WheelView.Row(bonusIndex, image));
             bonusIndex++;
         }
@@ -430,7 +427,7 @@ public class MainWindow extends JFrame {
     }
 
     private boolean isBonusEnabled() {
-        return configurationModule.config().bonus();
+        return currentGame.getGameParameters().getBonus();
     }
 
 
